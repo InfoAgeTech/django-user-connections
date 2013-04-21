@@ -1,4 +1,3 @@
-django-user-connections
-=======================
+# Overview
 
-Manages user connections in django.  Not stable, don't clone.
+Mongoengine-user-connections manages user connection for mongoengine applications.
