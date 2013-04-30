@@ -4,3 +4,4 @@
 *.pyc
 .settings/
 /bb.log
+/django_user_connections.db
