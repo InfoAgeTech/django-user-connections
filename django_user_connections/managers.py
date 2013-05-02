@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from django.http.response import Http404
 from django_tools.managers import CommonManager
+from django_tools.managers import TokenManager
 
 
-class ConnectionManager(CommonManager):
+class ConnectionManager(TokenManager, CommonManager):
 
     def create(self, created, with_user, **kwargs):
         """Creates a Connection.
@@ -87,17 +87,3 @@ class ConnectionManager(CommonManager):
         conn_user_ids = set(conn_user_ids)
         conn_user_ids.remove(user_id)
         return conn_user_ids
-
-    def get_by_token(self, token):
-        """Get's the connection by it's token."""
-        try:
-            return self.get(token=token)
-        except self.model.DoesNotExist:
-            return None
-
-    def get_by_token_or_404(self, token):
-        c = self.get_by_token(token)
-        if not c:
-            raise Http404
-
-        return c

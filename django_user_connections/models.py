@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import F
 
 from django_tools.models import AbstractBaseModel
-from python_tools.random_utils import random_alphanum_id
 
 from .constants import Status
 from .managers import ConnectionManager
@@ -40,8 +39,9 @@ class Connection(AbstractBaseModel):
         ordering = ('-created_dttm',)
 
     def save(self, *args, **kwargs):
+
         if not self.token:
-            self.token = Connection.get_next_token()
+            self.token = self.__class__.objects.get_next_token()
 
         return super(Connection, self).save(*args, **kwargs)
 
@@ -81,17 +81,3 @@ class Connection(AbstractBaseModel):
         """
         users = self.users.all()
         return users[1].id if users[0].id == self.created_id else users[0].id
-
-    @classmethod
-    def get_next_token(cls, length=20):
-        """Gets the next available token.  This method ensures the token is 
-        unique.
-        
-        """
-        token = random_alphanum_id(length)
-        while True:
-            conn = cls.objects.get_by_token(token=token)
-            if not conn:
-                return token
-
-            token = random_alphanum_id(length)

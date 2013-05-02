@@ -186,5 +186,5 @@ class ConnectionTests(BaseConnectionTestCase):
 
     def test_get_next_token(self):
         """Test for getting the next token."""
-        token = Connection.get_next_token(length=20)
+        token = Connection.objects.get_next_token(length=20)
         self.assertEqual(len(token), 20)
