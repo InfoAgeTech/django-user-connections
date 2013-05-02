@@ -6,12 +6,12 @@ from django.test.testcases import TestCase
 from django_user_connections.constants import Status
 from django_user_connections.models import Connection
 
-
 User = get_user_model()
 random_string = lambda len = None: uuid.uuid4().hex[:len or 10]
 
 
 def create_user(username=None, email=None):
+
     if not username:
         username = random_string()
 
@@ -51,10 +51,35 @@ class ConnectionManagerTests(BaseConnectionTestCase):
         self.assertTrue(usr_2 in users)
 
     def test_get_or_create(self):
-        raise NotImplementedError()
+        """Test get or create object manager method."""
+        usr_2 = User.objects.create()
+
+        conn, is_created = Connection.objects.get_or_create(created=self.usr,
+                                                            with_user=usr_2)
+        self.assertTrue(is_created)
+
+        conn_3, is_created = Connection.objects.get_or_create(created=self.usr,
+                                                              with_user=usr_2)
+        self.assertFalse(is_created)
+        self.assertEqual(conn, conn_3)
+
 
     def test_get_for_users(self):
-        raise NotImplementedError()
+        """Test getting connection between two users."""
+        usr_2 = User.objects.create()
+
+        conn = Connection.objects.create(created=self.usr,
+                                         with_user=usr_2)
+
+        conn_db = Connection.objects.get_for_users(user_id_1=self.usr.id,
+                                                   user_id_2=usr_2.id)
+        self.assertEqual(conn, conn_db)
+
+        conn_db_2 = Connection.objects.get_for_users(user_id_1=usr_2.id,
+                                                     user_id_2=self.usr.id)
+
+        self.assertEqual(conn, conn_db_2)
+
 
 class ConnectionTests(BaseConnectionTestCase):
 

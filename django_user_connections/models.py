@@ -2,10 +2,12 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
+
 from django_tools.models import AbstractBaseModel
-from django_user_connections.constants import Status
-from django_user_connections.managers import ConnectionManager
 from python_tools.random_utils import random_alphanum_id
+
+from .constants import Status
+from .managers import ConnectionManager
 
 User = get_user_model()
 

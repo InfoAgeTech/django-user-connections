@@ -29,12 +29,18 @@ class ConnectionManager(CommonManager):
         return conn
 
     def get_or_create(self, created, with_user, **kwargs):
+        """Gets or creates a connection.
+        
+        :param created: the user creating the connection.
+        :param with_user: the user to get or create the connection with.
+        
+        """
         conn = self.get_for_users(user_id_1=created.id, user_id_2=with_user.id)
 
         if conn:
-            return conn
+            return conn, False
 
-        return self.create(created=created, with_user=with_user)
+        return self.create(created=created, with_user=with_user), True
 
     def get_for_users(self, user_id_1, user_id_2):
         """Gets a connection between two users.
@@ -47,8 +53,6 @@ class ConnectionManager(CommonManager):
                         .filter(users__id=user_id_2).get())
         except self.model.DoesNotExist:
             return None
-#        return self.filter(users__id=user_id_1).filter(users__id=user_id_2)
-#        return self.filter(users__id=user_id_1).filter(users__id=user_id_2).get()
 
     def get_by_user(self, user, **kwargs):
         """Gets all connections for a user for both connections this
