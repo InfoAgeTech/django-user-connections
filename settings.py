@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'django_user_connections',
     'django_tools',
     'django_nose',
+    'python_tools',
 )
 
 SECRET_KEY = '12345abcd'
