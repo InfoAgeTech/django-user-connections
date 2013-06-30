@@ -82,7 +82,7 @@ class ConnectionManager(TokenManager, CommonManager):
             # A connection can either be created by this user or another user
             # so add both created_id and with_user_id to list.  Either can be
             # valid connection user id.
-            conn_user_ids.extend([c.with_user.id, c.created.id])
+            conn_user_ids.extend([c.with_user.id, c.created_user.id])
 
         conn_user_ids = set(conn_user_ids)
         conn_user_ids.remove(user_id)
