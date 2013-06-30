@@ -37,7 +37,7 @@ class ConnectionManagerTests(BaseConnectionTestCase):
         """Test for adding a connection between 2 users."""
         usr_2 = User.objects.create()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2,
                                          status=Status.PENDING)
 
@@ -54,11 +54,11 @@ class ConnectionManagerTests(BaseConnectionTestCase):
         """Test get or create object manager method."""
         usr_2 = User.objects.create()
 
-        conn, is_created = Connection.objects.get_or_create(created=self.usr,
+        conn, is_created = Connection.objects.get_or_create(created_user=self.usr,
                                                             with_user=usr_2)
         self.assertTrue(is_created)
 
-        conn_3, is_created = Connection.objects.get_or_create(created=self.usr,
+        conn_3, is_created = Connection.objects.get_or_create(created_user=self.usr,
                                                               with_user=usr_2)
         self.assertFalse(is_created)
         self.assertEqual(conn, conn_3)
@@ -68,7 +68,7 @@ class ConnectionManagerTests(BaseConnectionTestCase):
         """Test getting connection between two users."""
         usr_2 = User.objects.create()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2)
 
         conn_db = Connection.objects.get_for_users(user_id_1=self.usr.id,
@@ -88,7 +88,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for accepting a connection."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2,
                                          status=Status.PENDING)
 
@@ -100,7 +100,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for declining a connection."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                               with_user=usr_2,
                               status=Status.PENDING)
 
@@ -112,7 +112,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for incrementing the total activity count for a connection."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                               with_user=usr_2)
 
         self.assertEqual(conn.activity_count, 1)
@@ -125,7 +125,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for incrementing the total activity count for a connection."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2)
 
         self.assertEqual(conn.activity_count, 1)
@@ -141,7 +141,7 @@ class ConnectionTests(BaseConnectionTestCase):
         users = [create_user() for i in range(10)]
 
         for user in users:
-            conn = Connection.objects.create(created=usr_2,
+            conn = Connection.objects.create(created_user=usr_2,
                                              with_user=user)
 
         connections = Connection.objects.get_by_user_id(user_id=usr_2.id)
@@ -151,7 +151,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for getting a connection between 2 users."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                               with_user=usr_2,
                               status=Status.PENDING)
 
@@ -165,7 +165,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                               with_user=usr_2,
                               status=Status.PENDING)
 
@@ -176,7 +176,7 @@ class ConnectionTests(BaseConnectionTestCase):
         """Test for getting a connection by a token."""
         usr_2 = create_user()
 
-        conn = Connection.objects.create(created=self.usr,
+        conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2,
                                          status=Status.PENDING)
 

@@ -6,7 +6,7 @@ from django_tools.managers import TokenManager
 
 class ConnectionManager(TokenManager, CommonManager):
 
-    def create(self, created, with_user, **kwargs):
+    def create(self, created_user, with_user, **kwargs):
         """Creates a Connection.
         
         
@@ -22,13 +22,13 @@ class ConnectionManager(TokenManager, CommonManager):
             # should probably return an error here.  Should be using get_or_create
             return conn
 
-        conn = super(ConnectionManager, self).create(created=created,
-                                                     last_modified=created,
+        conn = super(ConnectionManager, self).create(created_user=created_user,
+                                                     last_modified_user=created_user,
                                                      **kwargs)
         conn.users.add(created, with_user)
         return conn
 
-    def get_or_create(self, created, with_user, **kwargs):
+    def get_or_create(self, created_user, with_user, **kwargs):
         """Gets or creates a connection.
         
         :param created: the user creating the connection.
@@ -40,7 +40,7 @@ class ConnectionManager(TokenManager, CommonManager):
         if conn:
             return conn, False
 
-        return self.create(created=created, with_user=with_user), True
+        return self.create(created_user=created_user, with_user=with_user), True
 
     def get_for_users(self, user_id_1, user_id_2):
         """Gets a connection between two users.
