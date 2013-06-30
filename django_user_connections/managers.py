@@ -17,7 +17,7 @@ class ConnectionManager(TokenManager, CommonManager):
            
         """
         # First need to make sure the connection doesn't already exist.
-        conn = self.get_for_users(user_id_1=created.id, user_id_2=with_user.id)
+        conn = self.get_for_users(user_id_1=created_user.id, user_id_2=with_user.id)
         if conn:
             # should probably return an error here.  Should be using get_or_create
             return conn
@@ -25,7 +25,7 @@ class ConnectionManager(TokenManager, CommonManager):
         conn = super(ConnectionManager, self).create(created_user=created_user,
                                                      last_modified_user=created_user,
                                                      **kwargs)
-        conn.users.add(created, with_user)
+        conn.users.add(created_user, with_user)
         return conn
 
     def get_or_create(self, created_user, with_user, **kwargs):
@@ -35,7 +35,7 @@ class ConnectionManager(TokenManager, CommonManager):
         :param with_user: the user to get or create the connection with.
         
         """
-        conn = self.get_for_users(user_id_1=created.id, user_id_2=with_user.id)
+        conn = self.get_for_users(user_id_1=created_user.id, user_id_2=with_user.id)
 
         if conn:
             return conn, False

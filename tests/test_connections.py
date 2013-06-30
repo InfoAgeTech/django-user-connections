@@ -43,7 +43,7 @@ class ConnectionManagerTests(BaseConnectionTestCase):
 
         self.assertEqual(conn.activity_count, 1)
         self.assertEqual(conn.status, Status.PENDING)
-        self.assertEqual(conn.created, self.usr)
+        self.assertEqual(conn.created_user, self.usr)
 
         users = list(conn.users.all())
         self.assertEqual(len(users), 2)

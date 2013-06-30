@@ -80,4 +80,4 @@ class Connection(AbstractBaseModel):
         
         """
         users = self.users.all()
-        return users[1].id if users[0].id == self.created_id else users[0].id
+        return users[1].id if users[0].id == self.created_user_id else users[0].id
