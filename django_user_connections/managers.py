@@ -7,8 +7,8 @@ from django_tools.managers import TokenManager
 class ConnectionManager(TokenManager, CommonManager):
 
     def create(self, created_user, with_user, **kwargs):
-        """Creates a Connection.
-        
+        """Creates a Connection. This works like get_or_create because we don't
+        want multiple connections created for the same users.
         
         :param created: the user of the person creating the connection.
         :param with_user: the user id of the person being requested 
@@ -17,7 +17,8 @@ class ConnectionManager(TokenManager, CommonManager):
            
         """
         # First need to make sure the connection doesn't already exist.
-        conn = self.get_for_users(user_id_1=created_user.id, user_id_2=with_user.id)
+        conn = self.get_for_users(user_1=created_user, user_2=with_user)
+
         if conn:
             # should probably return an error here.  Should be using get_or_create
             return conn
@@ -35,22 +36,22 @@ class ConnectionManager(TokenManager, CommonManager):
         :param with_user: the user to get or create the connection with.
         
         """
-        conn = self.get_for_users(user_id_1=created_user.id, user_id_2=with_user.id)
+        conn = self.get_for_users(user_1=created_user, user_2=with_user)
 
         if conn:
             return conn, False
 
         return self.create(created_user=created_user, with_user=with_user), True
 
-    def get_for_users(self, user_id_1, user_id_2):
+    def get_for_users(self, user_1, user_2):
         """Gets a connection between two users.
         
         :returns: single connection object between the two users. 
         """
         # Can I instead do:
         try:
-            return (self.filter(users__id=user_id_1)
-                        .filter(users__id=user_id_2).get())
+            return (self.filter(users__id=user_1.id)
+                        .filter(users__id=user_2.id).get())
         except self.model.DoesNotExist:
             return None
 

@@ -71,12 +71,12 @@ class ConnectionManagerTests(BaseConnectionTestCase):
         conn = Connection.objects.create(created_user=self.usr,
                                          with_user=usr_2)
 
-        conn_db = Connection.objects.get_for_users(user_id_1=self.usr.id,
-                                                   user_id_2=usr_2.id)
+        conn_db = Connection.objects.get_for_users(user_1=self.usr,
+                                                   user_2=usr_2)
         self.assertEqual(conn, conn_db)
 
-        conn_db_2 = Connection.objects.get_for_users(user_id_1=usr_2.id,
-                                                     user_id_2=self.usr.id)
+        conn_db_2 = Connection.objects.get_for_users(user_1=usr_2,
+                                                     user_2=self.usr)
 
         self.assertEqual(conn, conn_db_2)
 
@@ -155,9 +155,9 @@ class ConnectionTests(BaseConnectionTestCase):
                               with_user=usr_2,
                               status=Status.PENDING)
 
-        conn_1 = Connection.objects.get_for_users(user_id_1=self.usr.id, user_id_2=usr_2.id)
+        conn_1 = Connection.objects.get_for_users(user_1=self.usr, user_2=usr_2)
         self.assertEqual(conn, conn_1)
-        conn_2 = Connection.objects.get_for_users(user_id_1=usr_2.id, user_id_2=self.usr.id)
+        conn_2 = Connection.objects.get_for_users(user_1=usr_2, user_2=self.usr)
         self.assertEqual(conn, conn_2)
 
     def test_get_for_user_id(self):

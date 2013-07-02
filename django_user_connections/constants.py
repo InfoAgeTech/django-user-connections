@@ -2,9 +2,9 @@
 
 
 class Status:
-    ACCEPTED = 'accepted'
-    DECLINED = 'declined'
-    PENDING = 'pending'
+    ACCEPTED = 'ACCEPTED'
+    DECLINED = 'DECLINED'
+    PENDING = 'PENDING'
     CHOICES = (
         (ACCEPTED, 'Accepted'),
         (DECLINED, 'Declined'),
