@@ -6,6 +6,7 @@ env:
 install:
   - pip install -r requirements.txt --use-mirrors
   - pip install -q Django==$DJANGO_VERSION
+  - pip install https://github.com/InfoAgeTech/django-testing/tarball/master
   - pip install https://github.com/InfoAgeTech/django-tools/tarball/master
   - pip install https://github.com/InfoAgeTech/python-tools/tarball/master
   - pip install django_nose

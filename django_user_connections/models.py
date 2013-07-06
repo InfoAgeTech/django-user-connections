@@ -79,5 +79,5 @@ class Connection(AbstractBaseModel):
         that did NOT create the connection.
         
         """
-        users = self.users.all()
+        users = list(self.users.all())
         return users[1].id if users[0].id == self.created_user_id else users[0].id
