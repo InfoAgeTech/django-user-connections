@@ -33,8 +33,8 @@ class ConnectionTestCase(TestCase):
         user_2 = create_user()
 
         conn = Connection.objects.create(created_user=self.user,
-                              with_user=user_2,
-                              status=Status.PENDING)
+                                         with_user=user_2,
+                                         status=Status.PENDING)
 
         self.assertEqual(conn.status, Status.PENDING)
         conn.decline()
@@ -45,7 +45,7 @@ class ConnectionTestCase(TestCase):
         user_2 = create_user()
 
         conn = Connection.objects.create(created_user=self.user,
-                              with_user=user_2)
+                                         with_user=user_2)
 
         self.assertEqual(conn.activity_count, 1)
         conn.increment_activity_count()
@@ -84,8 +84,8 @@ class ConnectionTestCase(TestCase):
         user_2 = create_user()
 
         conn = Connection.objects.create(created_user=self.user,
-                              with_user=user_2,
-                              status=Status.PENDING)
+                                         with_user=user_2,
+                                         status=Status.PENDING)
 
         conn_1 = Connection.objects.get_for_users(user_1=self.user, user_2=user_2)
         self.assertEqual(conn, conn_1)
@@ -98,8 +98,8 @@ class ConnectionTestCase(TestCase):
         user_2 = create_user()
 
         conn = Connection.objects.create(created_user=self.user,
-                              with_user=user_2,
-                              status=Status.PENDING)
+                                         with_user=user_2,
+                                         status=Status.PENDING)
 
         self.assertEqual(conn.get_for_user_id(), user_2.id)
 
