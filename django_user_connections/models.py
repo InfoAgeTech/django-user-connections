@@ -6,14 +6,15 @@ from django.db.models import F
 from django_tools.models import AbstractBaseModel
 
 from .constants import Status
-from .managers import ConnectionManager
+from .managers import UserConnectionManager
 
 User = get_user_model()
 
 
-class Connection(AbstractBaseModel):
+class UserConnection(AbstractBaseModel):
     """
-    Fields:
+    Fields
+    ======
     
     * status = status of the connection. Can be one of the following:
         accepted = the connection has been accepted
@@ -29,13 +30,24 @@ class Connection(AbstractBaseModel):
     status = models.CharField(max_length=25,
                               default=Status.PENDING,
                               choices=Status.CHOICES)
-    users = models.ManyToManyField(User, db_index=True)
+    with_user = models.ForeignKey(User, db_index=True)
     token = models.CharField(max_length=50, db_index=True)
     email_sent = models.BooleanField(default=False)
     activity_count = models.IntegerField(default=1)
-    objects = ConnectionManager()
+    objects = UserConnectionManager()
+
+    @property
+    def users(self):
+        """Property field gettings the two users the connection is for."""
+        return [self.created_user, self.with_user]
+
+    @property
+    def user_ids(self):
+        """Gets the user ids of the two users connected."""
+        return [self.created_user_id, self.with_user_id]
 
     class Meta:
+        # TODO: might want an index_together on created_user and with_user
         ordering = ('-created_dttm',)
 
     def save(self, *args, **kwargs):
@@ -43,7 +55,7 @@ class Connection(AbstractBaseModel):
         if not self.token:
             self.token = self.__class__.objects.get_next_token()
 
-        return super(Connection, self).save(*args, **kwargs)
+        return super(UserConnection, self).save(*args, **kwargs)
 
     def accept(self):
         """Accepts a user connection."""
@@ -70,14 +82,17 @@ class Connection(AbstractBaseModel):
         :param user_id_2: user id of the second user in a connection
         
         """
-        return (cls.objects.filter(users__id=user_id_1)
-                           .filter(users__id=user_id_2)
-                           .update(activity_count=F('activity_count') + 1))
+        conn = cls.objects.get_for_users(user_id_1, user_id_2)
+
+        if not conn:
+            return False
+
+        conn.increment_activity_count()
+        return True
 
     def get_for_user_id(self):
         """Gets the user id this connection is intended for.  This is the user 
         that did NOT create the connection.
         
         """
-        users = list(self.users.all())
-        return users[1].id if users[0].id == self.created_user_id else users[0].id
+        return self.with_user_id

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from django.db.models.query_utils import Q
 from django_tools.managers import CommonManager
 from django_tools.managers import TokenManager
 
 
-class ConnectionManager(TokenManager, CommonManager):
+class UserConnectionManager(TokenManager, CommonManager):
 
     def create(self, created_user, with_user, **kwargs):
         """Creates a Connection. This works like get_or_create because we don't
@@ -23,11 +24,10 @@ class ConnectionManager(TokenManager, CommonManager):
             # should probably return an error here.  Should be using get_or_create
             return conn
 
-        conn = super(ConnectionManager, self).create(created_user=created_user,
-                                                     last_modified_user=created_user,
-                                                     **kwargs)
-        conn.users.add(created_user, with_user)
-        return conn
+        return super(UserConnectionManager, self).create(created_user=created_user,
+                                                         with_user=with_user,
+                                                         last_modified_user=created_user,
+                                                         **kwargs)
 
     def get_or_create(self, created_user, with_user, **kwargs):
         """Gets or creates a connection.
@@ -50,8 +50,10 @@ class ConnectionManager(TokenManager, CommonManager):
         """
         # Can I instead do:
         try:
-            return (self.filter(users__id=user_1.id)
-                        .filter(users__id=user_2.id).get())
+            return self.get(Q(created_user=user_1) | Q(created_user=user_2),
+                            Q(with_user=user_2) | Q(with_user=user_1))
+#             return (self.filter(users__id=user_1.id)
+#                         .filter(users__id=user_2.id).get())
         except self.model.DoesNotExist:
             return None
 
@@ -69,7 +71,8 @@ class ConnectionManager(TokenManager, CommonManager):
         this user.
         
         """
-        return self.filter(users__id=user_id, **kwargs)
+        return self.filter(Q(created_user__id=user_id) | Q(with_user__id=user_id),
+                           **kwargs)
 
     def get_user_ids(self, user_id):
         """Gets a set of all the user ids this user has connections with."""
