@@ -84,7 +84,7 @@ class UserConnectionManager(TokenManager, CommonManager):
         conn_user_ids = []
         for c in connections:
             # A connection can either be created by this user or another user
-            # so add both created_id and with_user_id to list.  Either can be
+            # so add both created_user_id and with_user_id to list.  Either can be
             # valid connection user id.
             conn_user_ids.extend([c.with_user.id, c.created_user.id])
 
