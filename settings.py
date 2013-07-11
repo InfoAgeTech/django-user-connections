@@ -26,7 +26,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django_user_connections',
     'django_testing',
-    'django_tools',
+    'django_core',
     'django_nose',
     'python_tools',
 )
