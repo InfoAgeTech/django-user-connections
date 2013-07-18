@@ -90,9 +90,12 @@ class UserConnection(AbstractBaseModel):
         conn.increment_activity_count()
         return True
 
-    def get_for_user_id(self):
-        """Gets the user id this connection is intended for.  This is the user 
-        that did NOT create the connection.
+    def get_connected_user(self, user):
+        """Gets the user who's not the user param passed in.
         
+        :param user: return the user who's not this user.
         """
-        return self.with_user_id
+        if user not in self.users:
+            return None
+
+        return self.users[1] if self.users[0] == user else self.users[0]

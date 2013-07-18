@@ -92,18 +92,6 @@ class ConnectionTestCase(TestCase):
         conn_2 = UserConnection.objects.get_for_users(user_1=user_2, user_2=self.user)
         self.assertEqual(conn, conn_2)
 
-    def test_get_for_user_id(self):
-        """Test for retrieving the id of the user the connection is intended for.
-        """
-        user_2 = create_user()
-
-        conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2,
-                                         status=Status.PENDING)
-
-        self.assertEqual(conn.get_for_user_id(), user_2.id)
-
-
     def test_get_by_token(self):
         """Test for getting a connection by a token."""
         user_2 = create_user()
@@ -132,3 +120,18 @@ class ConnectionTestCase(TestCase):
         conn_1 = UserConnection.objects.get_for_users(user_1=self.user,
                                                   user_2=user_2)
         self.assertIsNone(conn_1)
+
+    def test_get_connected_user(self):
+        """Test getting the user the connection is with. Could be the connected
+        user or the with_user.
+        """
+        user_2 = create_user()
+        c = UserConnection.objects.create(created_user=self.user,
+                                          with_user=user_2,
+                                          status=Status.ACCEPTED)
+
+        self.assertEqual(c.get_connected_user(self.user), user_2)
+        self.assertEqual(c.get_connected_user(user_2), self.user)
+
+        user_3 = create_user()
+        self.assertIsNone(c.get_connected_user(user_3))
