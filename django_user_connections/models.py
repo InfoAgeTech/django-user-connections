@@ -15,12 +15,12 @@ class UserConnection(AbstractBaseModel):
     """
     Fields
     ======
-    
+
     * status = status of the connection. Can be one of the following:
         accepted = the connection has been accepted
         pending = pending connection
     * token = token shared between the two users
-    * user_ids  = list of user ids who are connected. This assumes that at most  
+    * user_ids  = list of user ids who are connected. This assumes that at most
         2 people are connected.
     * email_sent = boolean indicating if a connection email was sent once
         a connection became accepted.
@@ -30,7 +30,15 @@ class UserConnection(AbstractBaseModel):
     status = models.CharField(max_length=25,
                               default=Status.PENDING,
                               choices=Status.CHOICES)
-    with_user = models.ForeignKey(User, db_index=True)
+    # TODO: This related name might not work since the 'with_user' field can
+    #       be either the user that created the connection or the one the
+    #       connection is for.
+    # Override the query set manager to return all connections for the user,
+    # with both connections they created or connections that were created with
+    # them?
+    with_user = models.ForeignKey(User,
+                                  related_name='connections',
+                                  db_index=True)
     token = models.CharField(max_length=50, db_index=True)
     email_sent = models.BooleanField(default=False)
     activity_count = models.IntegerField(default=1)
@@ -68,7 +76,8 @@ class UserConnection(AbstractBaseModel):
         self.save()
 
     def increment_activity_count(self):
-        """Increments total activity count for the connection between two users.
+        """Increments total activity count for the connection between two
+        users.
         """
         self.activity_count = F('activity_count') + 1
         self.save()
@@ -76,11 +85,12 @@ class UserConnection(AbstractBaseModel):
 
     @classmethod
     def increment_activity_count_by_users(cls, user_id_1, user_id_2):
-        """Increments total activity count for the connection between two users.
-        
+        """Increments total activity count for the connection between two
+        users.
+
         :param user_id_1: user id of the first user in a connection
         :param user_id_2: user id of the second user in a connection
-        
+
         """
         conn = cls.objects.get_for_users(user_id_1, user_id_2)
 
@@ -92,7 +102,7 @@ class UserConnection(AbstractBaseModel):
 
     def get_connected_user(self, user):
         """Gets the user who's not the user param passed in.
-        
+
         :param user: return the user who's not this user.
         """
         if user not in self.users:
