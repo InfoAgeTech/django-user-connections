@@ -10,12 +10,12 @@ class UserConnectionManager(TokenManager, CommonManager):
     def create(self, created_user, with_user, **kwargs):
         """Creates a Connection. This works like get_or_create because we don't
         want multiple connections created for the same users.
-        
+
         :param created: the user of the person creating the connection.
-        :param with_user: the user id of the person being requested 
+        :param with_user: the user id of the person being requested
             to connect
         :param status: the status of the connection. Default is 'pending'.
-           
+
         """
         # First need to make sure the connection doesn't already exist.
         conn = self.get_for_users(user_1=created_user, user_2=with_user)
@@ -24,29 +24,33 @@ class UserConnectionManager(TokenManager, CommonManager):
             # should probably return an error here.  Should be using get_or_create
             return conn
 
+        if 'last_modified_user' not in kwargs:
+            kwargs['last_modified_user'] = created_user
+
         return super(UserConnectionManager, self).create(created_user=created_user,
                                                          with_user=with_user,
-                                                         last_modified_user=created_user,
                                                          **kwargs)
 
     def get_or_create(self, created_user, with_user, **kwargs):
         """Gets or creates a connection.
-        
+
         :param created: the user creating the connection.
         :param with_user: the user to get or create the connection with.
-        
+
         """
         conn = self.get_for_users(user_1=created_user, user_2=with_user)
 
         if conn:
             return conn, False
 
-        return self.create(created_user=created_user, with_user=with_user), True
+        return self.create(created_user=created_user,
+                           with_user=with_user,
+                           **kwargs), True
 
     def get_for_users(self, user_1, user_2):
         """Gets a connection between two users.
-        
-        :returns: single connection object between the two users. 
+
+        :returns: single connection object between the two users.
         """
         # Can I instead do:
         try:
@@ -61,7 +65,7 @@ class UserConnectionManager(TokenManager, CommonManager):
         """Gets all connections for a user for both connections this
         user created as well as connections that were created by other with
         this user.
-        
+
         """
         return self.get_by_user_id(user_id=user.id, **kwargs)
 
@@ -69,7 +73,7 @@ class UserConnectionManager(TokenManager, CommonManager):
         """Gets all connections for a user by a user id for both connections this
         user created as well as connections that were created by other  with
         this user.
-        
+
         """
         return self.filter(Q(created_user__id=user_id) | Q(with_user__id=user_id),
                            **kwargs)
