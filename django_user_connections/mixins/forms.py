@@ -72,13 +72,21 @@ class UserConnectionSelectFormMixin(UserConnectionsFormMixin, forms.Form):
 
     selected_user = forms.ChoiceField()
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, exclude_user_ids=None, *args, **kwargs):
+        """Initialize the UserConnectionSelectForm.
+
+        Parameters
+        ==========
+        :param exclude_user_ids: a list or tuple of user ids to exclude from
+            the list of connections.
+        """
         super(UserConnectionSelectFormMixin, self).__init__(*args, **kwargs)
 
         if self.user_connections:
             self.fields['selected_user'].choices = get_user_connection_choices(
                                         user=self.user,
-                                        user_connections=self.user_connections)
+                                        user_connections=self.user_connections,
+                                        exclude_user_ids=exclude_user_ids)
 
     def clean(self):
         cleaned_data = super(UserConnectionSelectFormMixin, self).clean()
@@ -89,7 +97,7 @@ class UserConnectionSelectFormMixin(UserConnectionsFormMixin, forms.Form):
         return cleaned_data
 
 
-def get_user_connection_choices(user, user_connections, exclude_ids=None):
+def get_user_connection_choices(user, user_connections, exclude_user_ids=None):
     """
     Gets the list of user you have connections to and returns in a list of
     tuples where the first index is the connection token and the second index
@@ -97,7 +105,7 @@ def get_user_connection_choices(user, user_connections, exclude_ids=None):
 
     :param user: the authenticated user
     :param user_connections: the list or queryset of user connections
-    :param exclude_ids: list of user ids to exclude from the list
+    :param exclude_user_ids: list of user ids to exclude from the list
 
     [
         (CONNECTION_TOKEN, USERS_FULL_NAME)
@@ -105,14 +113,14 @@ def get_user_connection_choices(user, user_connections, exclude_ids=None):
 
 
     """
-    if exclude_ids is None:
-        exclude_ids = []
+    if exclude_user_ids is None:
+        exclude_user_ids = []
 
     connections = []
 
     for conn in user_connections:
         conn_user = conn.get_connected_user(user)
-        if conn_user.id in exclude_ids:
+        if conn_user.id in exclude_user_ids:
             continue
 
         connections.append((conn.token, conn_user.get_full_name()))
