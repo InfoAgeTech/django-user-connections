@@ -21,7 +21,6 @@ class UserConnectionManager(TokenManager, CommonManager):
         conn = self.get_for_users(user_1=created_user, user_2=with_user)
 
         if conn:
-            # should probably return an error here.  Should be using get_or_create
             return conn
 
         if 'last_modified_user' not in kwargs:
@@ -56,8 +55,6 @@ class UserConnectionManager(TokenManager, CommonManager):
         try:
             return self.get(Q(created_user=user_1) | Q(created_user=user_2),
                             Q(with_user=user_2) | Q(with_user=user_1))
-#             return (self.filter(users__id=user_1.id)
-#                         .filter(users__id=user_2.id).get())
         except self.model.DoesNotExist:
             return None
 
@@ -75,8 +72,8 @@ class UserConnectionManager(TokenManager, CommonManager):
         this user.
 
         """
-        return self.filter(Q(created_user__id=user_id) | Q(with_user__id=user_id),
-                           **kwargs)
+        return self.filter(Q(created_user__id=user_id) |
+                           Q(with_user__id=user_id)).filter(**kwargs)
 
     def get_user_ids(self, user_id):
         """Gets a set of all the user ids this user has connections with."""
