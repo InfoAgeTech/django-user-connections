@@ -11,7 +11,7 @@ from .managers import UserConnectionManager
 User = get_user_model()
 
 
-class UserConnection(AbstractBaseModel):
+class AbstractUserConnection(AbstractBaseModel):
     """
     Fields
     ======
@@ -55,6 +55,7 @@ class UserConnection(AbstractBaseModel):
         return [self.created_user_id, self.with_user_id]
 
     class Meta:
+        abstract = True
         # TODO: might want an index_together on created_user and with_user
         ordering = ('-created_dttm',)
 
@@ -109,3 +110,7 @@ class UserConnection(AbstractBaseModel):
             return None
 
         return self.users[1] if self.users[0] == user else self.users[0]
+
+
+class UserConnection(AbstractUserConnection):
+    """Concrete class for user connections."""
