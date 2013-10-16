@@ -64,7 +64,7 @@ class AbstractUserConnection(AbstractBaseModel):
         if not self.token:
             self.token = self.__class__.objects.get_next_token()
 
-        return super(UserConnection, self).save(*args, **kwargs)
+        return super(AbstractUserConnection, self).save(*args, **kwargs)
 
     def accept(self):
         """Accepts a user connection."""
