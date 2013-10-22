@@ -57,7 +57,7 @@ class AbstractUserConnection(AbstractBaseModel):
     class Meta:
         abstract = True
         # TODO: might want an index_together on created_user and with_user
-        ordering = ('-created_dttm',)
+        ordering = ('-id',)
 
     def save(self, *args, **kwargs):
 
