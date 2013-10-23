@@ -2,6 +2,10 @@
 
 from ..constants import Status
 from ..models import UserConnection
+from django.contrib.auth import get_user_model
+from django.http.response import Http404
+
+User = get_user_model()
 
 
 class UserConnectionViewMixin(object):
@@ -19,10 +23,34 @@ class UserConnectionViewMixin(object):
     connection_user = None
 
     def dispatch(self, *args, **kwargs):
-        self.user_connection = UserConnection.objects.get_by_id_or_404(
+        # TODO: if I want to be able to hit a connection by their username,
+        #       i can do a check on the connection_id to see if it's digits
+        #       (which would represent a connection_id) or at least 1 non-digit
+        #       (which would represent a username)
+        connection_key = kwargs.get(self.connection_id_pk_url_kwarg)
+
+        if connection_key.isdigit():
+            # It's the connection primary key object.
+            self.user_connection = UserConnection.objects.get_by_id_or_404(
                                 id=kwargs.get(self.connection_id_pk_url_kwarg),
                                 prefetch_related=('with_user',))
-        self.connection_user = self.user_connection.with_user
+
+        else:
+            # The connection key is a username (string)
+            try:
+                connection_user = User.objects.get(username=connection_key)
+            except:
+                raise Http404
+
+            self.user_connection = UserConnection.objects.get_for_users(
+                            user_1=self.request.user,
+                            user_2=connection_user)
+
+            if not self.user_connection:
+                raise Http404
+
+        self.connection_user = self.user_connection.get_connected_user(
+                                                        user=self.request.user)
         return super(UserConnectionViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
