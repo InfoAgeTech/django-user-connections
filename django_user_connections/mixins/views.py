@@ -14,7 +14,9 @@ class UserConnectionViewMixin(object):
     This view mixin places the following attributes on the view:
 
     * connection_id_pk_url_kwarg: the url primary key for the connection.
-        Defaults to 'connection_id'
+        Defaults to 'connection_id'.  This value assumes that if you're using
+        an all digit value that it's referring to a connection id.  If the
+        value is not a digit, it will try to get the connection by username.
     * user_connection: the UserConnection object for the users connected.
     * connection_user: the user the authenticated user is connected with.
     """
@@ -23,14 +25,10 @@ class UserConnectionViewMixin(object):
     connection_user = None
 
     def dispatch(self, *args, **kwargs):
-        # TODO: if I want to be able to hit a connection by their username,
-        #       i can do a check on the connection_id to see if it's digits
-        #       (which would represent a connection_id) or at least 1 non-digit
-        #       (which would represent a username)
         connection_key = kwargs.get(self.connection_id_pk_url_kwarg)
 
         if connection_key.isdigit():
-            # It's the connection primary key object.
+            # It's the connection primary key object (integer).
             self.user_connection = UserConnection.objects.get_by_id_or_404(
                                 id=kwargs.get(self.connection_id_pk_url_kwarg),
                                 prefetch_related=('with_user',))
