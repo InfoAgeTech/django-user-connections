@@ -1,15 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from ..constants import Status
-from ..models import UserConnection
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
+from django_user_connections import get_user_connection_model
 
 User = get_user_model()
+UserConnection = get_user_connection_model()
 
 
 class UserConnectionViewMixin(object):
-    """Gets a user connection by the user connection_id from the url.
+    """Gets a user connection by the user connection_id from the url.  The
+    user connection can be retrieved in one of three ways via url args.
+
+    1) <connection_id> - this can be one of two things:
+        1) the actual id of the user connection.  This is assumed to be a digit
+           value.
+        2) username. The connection id can also be a username since a username
+           must include at least one character value and will not be all
+           digits.
+    2) <connection_token> = this is the token for the user connection.
 
     This view mixin places the following attributes on the view:
 
@@ -20,14 +30,21 @@ class UserConnectionViewMixin(object):
     * user_connection: the UserConnection object for the users connected.
     * connection_user: the user the authenticated user is connected with.
     """
+    pk_url_kwarg = 'connection_id'
     connection_id_pk_url_kwarg = 'connection_id'
     user_connection = None
     connection_user = None
+    model = UserConnection
+    context_object_name = 'user_connection'
 
     def dispatch(self, *args, **kwargs):
         connection_key = kwargs.get(self.connection_id_pk_url_kwarg)
 
-        if connection_key.isdigit():
+        if 'connection_token' in kwargs:
+            # Attempting to get the user connection by the connection token.
+            self.user_connection = UserConnection.objects.get_by_token_or_404(
+                                        token=kwargs.get('connection_token'))
+        elif connection_key.isdigit():
             # It's the connection primary key object (integer).
             self.user_connection = UserConnection.objects.get_by_id_or_404(
                                 id=kwargs.get(self.connection_id_pk_url_kwarg),
@@ -46,6 +63,10 @@ class UserConnectionViewMixin(object):
 
             if not self.user_connection:
                 raise Http404
+
+        if self.request.user.id not in self.user_connection.user_ids:
+            # This connection doesn't belong to the authenticated user
+            raise Http404
 
         self.connection_user = self.user_connection.get_connected_user(
                                                         user=self.request.user)
@@ -79,8 +100,13 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
     user_connections_accepted = None
     user_connections_declined = None
     user_connections_pending = None
+    user_connections_inactivated = None
 
     def dispatch(self, *args, **kwargs):
+        """Puts the querysets by type on the view.  The benefit to this the
+        query only runs when you want that type of user connection status. So
+        if no pending connection are wanted, no queries are run for that type.
+        """
         self.user_connections = self.get_user_connections()
         self.user_connections_accepted = self.user_connections.filter(
                                                         status=Status.ACCEPTED)
@@ -88,6 +114,8 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
                                                         status=Status.DECLINED)
         self.user_connections_pending = self.user_connections.filter(
                                                         status=Status.PENDING)
+        self.user_connections_inactivated = self.user_connections.filter(
+                                                        status=Status.INACTIVE)
         return super(UserConnectionsViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -100,6 +128,7 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
         context['user_connections_accepted'] = self.user_connections_accepted
         context['user_connections_declined'] = self.user_connections_declined
         context['user_connections_pending'] = self.user_connections_pending
+        context['user_connections_inactivated'] = self.user_connections_inactivated
         return context
 
 

@@ -16,9 +16,8 @@ class AbstractUserConnection(AbstractBaseModel):
     Fields
     ======
 
-    * status = status of the connection. Can be one of the following:
-        accepted = the connection has been accepted
-        pending = pending connection
+    * status = status of the connection. Can be one of
+        django_user_connections.constants.Status
     * token = token shared between the two users
     * user_ids  = list of user ids who are connected. This assumes that at most
         2 people are connected.
@@ -30,12 +29,6 @@ class AbstractUserConnection(AbstractBaseModel):
     status = models.CharField(max_length=25,
                               default=Status.PENDING,
                               choices=Status.CHOICES)
-    # TODO: This related name might not work since the 'with_user' field can
-    #       be either the user that created the connection or the one the
-    #       connection is for.
-    # Override the query set manager to return all connections for the user,
-    # with both connections they created or connections that were created with
-    # them?
     with_user = models.ForeignKey(User,
                                   related_name='connections',
                                   db_index=True)
@@ -75,6 +68,27 @@ class AbstractUserConnection(AbstractBaseModel):
         """Declines a user connection."""
         self.status = Status.DECLINED
         self.save()
+
+    def inactivate(self):
+        """Inactivate a user connection."""
+        self.status = Status.INACTIVE
+        self.save()
+
+    def is_accepted(self):
+        """Boolean indicating if the status is accepted."""
+        return self.status == Status.ACCEPTED
+
+    def is_pending(self):
+        """Boolean indicating if the status is pending."""
+        return self.status == Status.PENDING
+
+    def is_declined(self):
+        """Boolean indicating if the status is declined."""
+        return self.status == Status.DECLINED
+
+    def is_inactive(self):
+        """Boolean indicating if the status is inactive."""
+        return self.status == Status.INACTIVE
 
     def increment_activity_count(self):
         """Increments total activity count for the connection between two

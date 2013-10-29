@@ -2,9 +2,10 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django_testing.user_utils import create_user
 from django_user_connections.constants import Status
-from django_user_connections.models import UserConnection
+from django_user_connections import get_user_connection_model
 
 User = get_user_model()
+UserConnection = get_user_connection_model()
 
 
 class ConnectionManagerTestCase(TestCase):
