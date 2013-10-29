@@ -75,20 +75,21 @@ class UserConnectionManager(TokenManager, CommonManager):
         return self.filter(Q(created_user__id=user_id) |
                            Q(with_user__id=user_id)).filter(**kwargs)
 
-    def get_user_ids(self, user_id):
+    def get_user_ids(self, user_id, **kwargs):
         """Gets a set of all the user ids this user has connections with."""
-        connections = self.get_by_user_id(user_id)
+        # TODO: This should be cached since it's not something that will change
+        #       very often.
+        user_ids = self.get_by_user_id(user_id, **kwargs).values_list(
+                                                            'created_user',
+                                                            'with_user')
 
-        if not connections:
+        if not user_ids:
             return []
 
         conn_user_ids = []
-        for c in connections:
-            # A connection can either be created by this user or another user
-            # so add both created_user_id and with_user_id to list.  Either can be
-            # valid connection user id.
-            conn_user_ids.extend([c.with_user.id, c.created_user.id])
+        for users in user_ids:
+            for usr_id in users:
+                if usr_id != user_id:
+                    conn_user_ids.append(usr_id)
 
-        conn_user_ids = set(conn_user_ids)
-        conn_user_ids.remove(user_id)
-        return conn_user_ids
+        return list(set(conn_user_ids))

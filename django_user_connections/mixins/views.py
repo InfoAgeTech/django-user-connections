@@ -96,11 +96,20 @@ class BaseUserConnectionsViewMixin(object):
 
 
 class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
-    """View mixin for getting the authenticated user's connections."""
+    """View mixin for getting the authenticated user's connections.
+
+    * user_connections_accepted: queryset of accepted user connections
+    * user_connections_declined: queryset of declined user connections
+    * user_connections_pending: queryset of pending user connections
+    * user_connections_inactivated: queryset of inactivated user connections
+    * connection_user_ids: a list of user ids the authenticated user is
+        connected with.
+    """
     user_connections_accepted = None
     user_connections_declined = None
     user_connections_pending = None
     user_connections_inactivated = None
+    connection_user_ids = None
 
     def dispatch(self, *args, **kwargs):
         """Puts the querysets by type on the view.  The benefit to this the
@@ -116,6 +125,8 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
                                                         status=Status.PENDING)
         self.user_connections_inactivated = self.user_connections.filter(
                                                         status=Status.INACTIVE)
+        self.connection_user_ids = UserConnection.objects.get_user_ids(
+                                                user_id=self.request.user.id)
         return super(UserConnectionsViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -129,6 +140,7 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
         context['user_connections_declined'] = self.user_connections_declined
         context['user_connections_pending'] = self.user_connections_pending
         context['user_connections_inactivated'] = self.user_connections_inactivated
+        context['connection_user_ids'] = self.connection_user_ids
         return context
 
 
