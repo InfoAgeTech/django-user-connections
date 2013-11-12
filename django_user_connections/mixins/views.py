@@ -80,6 +80,12 @@ class UserConnectionViewMixin(object):
         return context
 
 
+class UserConnectionSingleObjectViewMixin(UserConnectionViewMixin):
+
+    def get_object(self):
+        self.user_connection
+
+
 class BaseUserConnectionsViewMixin(object):
     """Base user connection mixin."""
     user_connections = None
