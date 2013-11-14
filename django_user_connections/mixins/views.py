@@ -4,6 +4,7 @@ from ..constants import Status
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
 from django_user_connections import get_user_connection_model
+from django.shortcuts import redirect
 
 User = get_user_model()
 UserConnection = get_user_connection_model()
@@ -52,6 +53,9 @@ class UserConnectionViewMixin(object):
 
         else:
             # The connection key is a username (string)
+            if self.request.user.username == connection_key:
+                return redirect('/')
+
             try:
                 connection_user = User.objects.get(username=connection_key)
             except:
