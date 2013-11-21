@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from django import forms
+from ..forms.fields import BaseUserConnectionFieldMixin
+from ..forms.fields import UserConnectionChoiceField
 
 
-class UserFormMixin(forms.Form):
+class UserFormMixin(object):
     """Form mixin that puts the user on the form object."""
 
     def __init__(self, user=None, *args, **kwargs):
@@ -15,46 +16,36 @@ class UserFormMixin(forms.Form):
         super(UserFormMixin, self).__init__(*args, **kwargs)
 
 
-class UserConnectionsFormMixin(UserFormMixin, forms.Form):
+class UserConnectionsFormMixin(UserFormMixin):
     """Form mixin that puts the user on the form object."""
 
-    def __init__(self, user_connections=None, *args, **kwargs):
+    def __init__(self, user_connections=None, exclude_user_ids=None, *args,
+                 **kwargs):
         if not hasattr(self, 'user_connections'):
             if user_connections is None:
                 raise Exception('user connections are required for this form.')
 
             self.user_connections = user_connections
 
+        self.exclude_user_ids = exclude_user_ids
+
         super(UserConnectionsFormMixin, self).__init__(*args, **kwargs)
 
+        # Updates any BaseUserConnectionFieldMixin fields with the user and
+        # user_connections
+        for key, field in self.fields.items():
+            if isinstance(field, BaseUserConnectionFieldMixin):
+                if self.user:
+                    field.user = self.user
 
-def get_user_connection_choices(user, user_connections, exclude_user_ids=None):
-    """
-    Gets the list of user you have connections to and returns in a list of
-    tuples where the first index is the connection token and the second index
-    is the users name sorted by users name.
+                if self.user_connections:
+                    field.user_connections = self.user_connections
 
-    :param user: the authenticated user
-    :param user_connections: the list or queryset of user connections
-    :param exclude_user_ids: list of user ids to exclude from the list
+                if self.exclude_user_ids:
+                    field.exclude_user_ids = self.exclude_user_ids
 
-    [
-        (CONNECTION_TOKEN, USERS_FULL_NAME)
-    ]
+                field_initial = self.initial.get(key)
 
-
-    """
-    if exclude_user_ids is None:
-        exclude_user_ids = []
-
-    connections = []
-
-    for conn in user_connections:
-        conn_user = conn.get_connected_user(user)
-        if conn_user.id in exclude_user_ids:
-            continue
-
-        connections.append((conn.token, conn_user.get_full_name()))
-
-    connections.sort(key=lambda k: k[1])
-    return connections
+                if field_initial:
+                    self.initial[key] = field.get_token_by_user_id(
+                                                                field_initial)
