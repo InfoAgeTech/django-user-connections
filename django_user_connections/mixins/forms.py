@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from ..forms.fields import BaseUserConnectionFieldMixin
-from ..forms.fields import UserConnectionChoiceField
 
 
 class UserFormMixin(object):
