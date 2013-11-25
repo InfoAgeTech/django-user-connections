@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from ..constants import Status
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
-from django_user_connections import get_user_connection_model
 from django.shortcuts import redirect
+from django_user_connections import get_user_connection_model
+
+from ..constants import Status
+
 
 User = get_user_model()
 UserConnection = get_user_connection_model()

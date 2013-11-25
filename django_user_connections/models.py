@@ -2,11 +2,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
-
 from django_core.models import AbstractBaseModel
 
 from .constants import Status
 from .managers import UserConnectionManager
+
 
 User = get_user_model()
 
