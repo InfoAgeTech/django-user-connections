@@ -12,8 +12,8 @@ class BaseUserConnectionFieldMixin(object):
     """
 
     def __init__(self, user_connections=None, user=None,
-                 exclude_user_ids=None, include_user_choice=False, *args,
-                 **kwargs):
+                 exclude_user_ids=None, include_user_choice=False,
+                 *args, **kwargs):
         """
         :param user_connections: iterable of user connections
         :param user: this is the user the connections are for.
@@ -124,9 +124,14 @@ class BaseUserConnectionFieldMixin(object):
         return None
 
     def get_token_by_user_id(self, user_id):
-        """Gets a connection token by a user's id."""
+        """Gets a connection token by a user's id. If the user_id == self.user
+        then this returns 'self' as the initial.
+        """
         if not user_id or not self.user_connections:
             return None
+
+        if self.user and self.user.id == user_id:
+            return 'self'
 
         for connection in self.user_connections:
             if user_id in connection.user_ids:
@@ -139,7 +144,25 @@ class BaseUserConnectionFieldMixin(object):
         return self.get_token_by_user_id(user_id=user.id)
 
 
-class UserConnectionChoiceField(BaseUserConnectionFieldMixin, ChoiceField):
+class BaseUserConnectionChoiceField(BaseUserConnectionFieldMixin):
+
+    def __init__(self, empty_label='-----------', *args, **kwargs):
+        """
+        :param empty_label: the text to display for an empty option on a choice
+            field if a field is not required.
+        """
+        self.empty_label = empty_label
+
+        super(BaseUserConnectionChoiceField, self).__init__(*args, **kwargs)
+
+    def _update_choices(self):
+        super(BaseUserConnectionChoiceField, self)._update_choices()
+
+        if not self.required and self.empty_label != None:
+            self.choices.insert(0, ('', self.empty_label))
+
+
+class UserConnectionChoiceField(BaseUserConnectionChoiceField, ChoiceField):
     """Builds a choice fields based on an iterable of user connections.
 
     When using this field, it's best to also add the UserConnectionsFormMixin
@@ -181,13 +204,15 @@ class UserConnectionChoiceField(BaseUserConnectionFieldMixin, ChoiceField):
                 self._initial = self.get_token_by_user(value)
             except:
                 self._initial = value
+        elif value == None:
+            self._initial = 'self'
         else:
             self._initial = value
 
     initial = property(_get_initial, _set_initial)
 
 
-class UserConnectionsMultipleChoiceField(BaseUserConnectionFieldMixin,
+class UserConnectionsMultipleChoiceField(BaseUserConnectionChoiceField,
                                          MultipleChoiceField):
     """Builds a multiple choice fields based on an iterable of user
     connections.
