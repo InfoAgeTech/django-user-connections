@@ -12,7 +12,9 @@ Build Status
 
 Intallation
 ===========
-Download the source from Github and run ``python setup.py install``.
+Install the app:: 
+
+   pip install django-user-connections
 
 Dependencies
 ============
