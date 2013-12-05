@@ -170,6 +170,15 @@ class UserConnectionChoiceField(BaseUserConnectionChoiceField, ChoiceField):
     correctly display the list of users available.
     """
 
+    def __init__(self, empty_label=u'-- Select User --', *args, **kwargs):
+        """
+        :param empty_label: the text to display for an empty option on a choice
+            field if a field is not required.
+        """
+        super(UserConnectionChoiceField, self).__init__(empty_label=empty_label,
+                                                        *args,
+                                                        **kwargs)
+
     def clean(self, value):
         """Returns the user object or None if not found."""
         if value == 'self':
