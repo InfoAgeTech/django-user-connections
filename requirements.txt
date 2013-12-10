@@ -1,1 +1,2 @@
-django
+https://github.com/InfoAgeTech/django-tools/tarball/master
+https://github.com/InfoAgeTech/python-tools/tarball/master
