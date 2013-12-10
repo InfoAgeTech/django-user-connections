@@ -26,6 +26,6 @@ TODO
 
 Tests
 =====
-From the project root where the manage.py file is, run::
+From the tests directory where the manage.py file is, run::
 
    python manage.py test
