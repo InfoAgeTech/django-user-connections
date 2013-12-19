@@ -2,6 +2,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
+from django_core.mixins.models.tokens import AbstractTokenModel
 from django_core.models import AbstractBaseModel
 
 from .constants import Status
@@ -11,7 +12,7 @@ from .managers import UserConnectionManager
 User = get_user_model()
 
 
-class AbstractUserConnection(AbstractBaseModel):
+class AbstractUserConnection(AbstractTokenModel, AbstractBaseModel):
     """
     Fields
     ======
@@ -32,7 +33,6 @@ class AbstractUserConnection(AbstractBaseModel):
     with_user = models.ForeignKey(User,
                                   related_name='connections',
                                   db_index=True)
-    token = models.CharField(max_length=50, db_index=True)
     email_sent = models.BooleanField(default=False)
     activity_count = models.IntegerField(default=1)
     objects = UserConnectionManager()
@@ -51,13 +51,6 @@ class AbstractUserConnection(AbstractBaseModel):
         abstract = True
         # TODO: might want an index_together on created_user and with_user
         ordering = ('-id',)
-
-    def save(self, *args, **kwargs):
-
-        if not self.token:
-            self.token = self.__class__.objects.get_next_token()
-
-        return super(AbstractUserConnection, self).save(*args, **kwargs)
 
     def accept(self):
         """Accepts a user connection."""
