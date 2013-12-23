@@ -10,6 +10,11 @@ django-user-connections |travisci| |coveralls|
 ==============================================
 django-user-connections is a python module written for django that handles user connections.
 
+Docs
+====
+
+http://django-user-connections.readthedocs.org
+
 Intallation
 ===========
 Install the app:: 
