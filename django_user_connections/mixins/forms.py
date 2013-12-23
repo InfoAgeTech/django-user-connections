@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django_core.mixins.forms.users import UserFormMixin
+from django_core.forms.mixins.users import UserFormMixin
 
 from ..forms.fields import BaseUserConnectionFieldMixin
 

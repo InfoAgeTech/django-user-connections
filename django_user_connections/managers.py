@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models.query_utils import Q
-from django_core.managers import CommonManager
-from django_core.managers import TokenManager
+from django_core.models.managers import CommonManager
+from django_core.models.managers import TokenManager
 
 
 class UserConnectionManager(TokenManager, CommonManager):
