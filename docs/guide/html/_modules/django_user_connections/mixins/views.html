@@ -69,13 +69,13 @@
         
         
             <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../apireference.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.models">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#mixins">Mixins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.managers">Managers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.constants">Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections">Helper Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-django_user_connections.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#mixins">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-django_user_connections.managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-django_user_connections.constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api.html#module-django_user_connections">Helper Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -120,7 +120,7 @@
 <span class="n">UserConnection</span> <span class="o">=</span> <span class="n">get_user_connection_model</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="UserConnectionViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionViewMixin"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.UserConnectionViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gets a user connection by the user connection_id from the url.  The</span>
 <span class="sd">    user connection can be retrieved in one of three ways via url args.</span>
 
@@ -200,7 +200,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span>
 
 
-<div class="viewcode-block" id="BaseUserConnectionsViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.BaseUserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">BaseUserConnectionsViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseUserConnectionsViewMixin"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.BaseUserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">BaseUserConnectionsViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base user connection mixin.&quot;&quot;&quot;</span>
     <span class="n">user_connections</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -215,7 +215,7 @@
                                                 <span class="s">&#39;with_user&#39;</span><span class="p">))</span>
 
 </div>
-<div class="viewcode-block" id="UserConnectionsViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsViewMixin</span><span class="p">(</span><span class="n">BaseUserConnectionsViewMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionsViewMixin"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.UserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsViewMixin</span><span class="p">(</span><span class="n">BaseUserConnectionsViewMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View mixin for getting the authenticated user&#39;s connections.</span>
 
 <span class="sd">    * user_connections_accepted: queryset of accepted user connections</span>
@@ -231,7 +231,7 @@
     <span class="n">user_connections_inactivated</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">connection_user_ids</span> <span class="o">=</span> <span class="bp">None</span>
 
-<div class="viewcode-block" id="UserConnectionsViewMixin.dispatch"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsViewMixin.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionsViewMixin.dispatch"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.UserConnectionsViewMixin.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Puts the querysets by type on the view.  The benefit to this the</span>
 <span class="sd">        query only runs when you want that type of user connection status. So</span>
 <span class="sd">        if no pending connection are wanted, no queries are run for that type.</span>
@@ -264,7 +264,7 @@
         <span class="k">return</span> <span class="n">context</span>
 
 </div>
-<div class="viewcode-block" id="UserConnectionsByUserViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsByUserViewMixin</span><span class="p">(</span><span class="n">UserConnectionsViewMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionsByUserViewMixin"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsByUserViewMixin</span><span class="p">(</span><span class="n">UserConnectionsViewMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;View mixin for getting the authenticated user&#39;s connections and orders</span>
 <span class="sd">    them by activity count and returns a tuple of the user connected with along</span>
 <span class="sd">    with the connection.</span>
@@ -280,7 +280,7 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionsByUserViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
                                                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="UserConnectionsByUserViewMixin.get_context_data"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionsByUserViewMixin.get_context_data"><a class="viewcode-back" href="../../../api.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param page_size: the number of connections to return</span>
 <span class="sd">        :return: tuple with the connected user being the first part, the second</span>

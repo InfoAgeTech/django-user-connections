@@ -69,13 +69,13 @@
         
         
             <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../apireference.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.models">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#mixins">Mixins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.managers">Managers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.constants">Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections">Helper Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-django_user_connections.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#mixins">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-django_user_connections.managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-django_user_connections.constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api.html#module-django_user_connections">Helper Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -113,10 +113,10 @@
 <span class="kn">from</span> <span class="nn">django_core.models.managers</span> <span class="kn">import</span> <span class="n">TokenManager</span>
 
 
-<div class="viewcode-block" id="UserConnectionManager"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionManager</span><span class="p">(</span><span class="n">TokenManager</span><span class="p">,</span> <span class="n">CommonManager</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionManager</span><span class="p">(</span><span class="n">TokenManager</span><span class="p">,</span> <span class="n">CommonManager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;User Connection manager.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UserConnectionManager.create"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.create"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates a Connection. This works like get_or_create because we don&#39;t</span>
 <span class="sd">        want multiple connections created for the same users.</span>
 
@@ -139,7 +139,7 @@
                                                          <span class="n">with_user</span><span class="o">=</span><span class="n">with_user</span><span class="p">,</span>
                                                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="UserConnectionManager.get_or_create"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_or_create">[docs]</a>    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.get_or_create"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.get_or_create">[docs]</a>    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets or creates a connection.</span>
 
 <span class="sd">        :param created: the user creating the connection.</span>
@@ -155,7 +155,7 @@
                            <span class="n">with_user</span><span class="o">=</span><span class="n">with_user</span><span class="p">,</span>
                            <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">True</span>
 </div>
-<div class="viewcode-block" id="UserConnectionManager.get_for_users"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_for_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_for_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.get_for_users"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.get_for_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_for_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets a connection between two users.</span>
 
 <span class="sd">        :returns: single connection object between the two users.</span>
@@ -166,7 +166,7 @@
         <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 </div>
-<div class="viewcode-block" id="UserConnectionManager.get_by_user"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_by_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.get_by_user"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.get_by_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets all connections for a user for both connections this</span>
 <span class="sd">        user created as well as connections that were created by other with</span>
 <span class="sd">        this user.</span>
@@ -174,7 +174,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_by_user_id</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="UserConnectionManager.get_by_user_id"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_by_user_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.get_by_user_id"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.get_by_user_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets all connections for a user by a user id for both connections this</span>
 <span class="sd">        user created as well as connections that were created by other  with</span>
 <span class="sd">        this user.</span>
@@ -183,7 +183,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">created_user__id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span> <span class="o">|</span>
                            <span class="n">Q</span><span class="p">(</span><span class="n">with_user__id</span><span class="o">=</span><span class="n">user_id</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="UserConnectionManager.get_user_ids"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_user_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UserConnectionManager.get_user_ids"><a class="viewcode-back" href="../../api.html#django_user_connections.managers.UserConnectionManager.get_user_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets a set of all the user ids this user has connections with.&quot;&quot;&quot;</span>
         <span class="c"># TODO: This should be cached since it&#39;s not something that will change</span>
         <span class="c">#       very often.</span>
