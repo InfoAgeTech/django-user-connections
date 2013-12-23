@@ -1,7 +1,10 @@
-.project
-.pydevproject
-.DS_Store
-.settings/
 *.pyc
 *.db
 *.log
+.DS_Store
+
+.project
+.pydevproject
+.settings/
+
+docs/guide
