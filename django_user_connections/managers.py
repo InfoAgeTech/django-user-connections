@@ -6,6 +6,7 @@ from django_core.models.managers import TokenManager
 
 
 class UserConnectionManager(TokenManager, CommonManager):
+    """User Connection manager."""
 
     def create(self, created_user, with_user, **kwargs):
         """Creates a Connection. This works like get_or_create because we don't
@@ -51,7 +52,6 @@ class UserConnectionManager(TokenManager, CommonManager):
 
         :returns: single connection object between the two users.
         """
-        # Can I instead do:
         try:
             return self.get(Q(created_user=user_1) | Q(created_user=user_2),
                             Q(with_user=user_2) | Q(with_user=user_1))

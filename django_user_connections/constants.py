@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
-class Status:
+class Status():
     """The different status's a user connection can be in.
 
-    * ACCEPTED: an accepted and current user connection
-    * DECLINED: a declined user connection.  This connection was never in an
+    :field ACCEPTED: an accepted and current user connection
+    :field DECLINED: a declined user connection.  This connection was never in an
         ACCEPTED state, or active.
-    * PENDING: the user connection is pending and waiting on a response from
+    :field PENDING: the user connection is pending and waiting on a response from
         the user.
-    * INACTIVE: represents a user connection for two users that was once
+    :field INACTIVE: represents a user connection for two users that was once
         accepted and is no longer.
     """
     ACCEPTED = 'ACCEPTED'

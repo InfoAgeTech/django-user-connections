@@ -1,0 +1,227 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>django_user_connections.managers &mdash; django-user-connections 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'../../',
+        VERSION:'0.0.1',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+    <link rel="top" title="django-user-connections 0.0.1 documentation" href="../../index.html"/>
+        <link rel="up" title="django_user_connections" href="../django_user_connections.html"/> 
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="icon icon-home"> django-user-connections</a>
+        <form class="wy-form" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search docs" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apireference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#mixins">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections">Helper Methods</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="/">django-user-connections</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <ul class="wy-breadcrumbs">
+  <li><a href="../../index.html">Docs</a> &raquo;</li>
+  <li><a href="">django_user_connections.managers</a></li>
+  
+</ul>
+<hr/>
+
+          
+  <h1>Source code for django_user_connections.managers</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">django.db.models.query_utils</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">django_core.models.managers</span> <span class="kn">import</span> <span class="n">CommonManager</span>
+<span class="kn">from</span> <span class="nn">django_core.models.managers</span> <span class="kn">import</span> <span class="n">TokenManager</span>
+
+
+<div class="viewcode-block" id="UserConnectionManager"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionManager</span><span class="p">(</span><span class="n">TokenManager</span><span class="p">,</span> <span class="n">CommonManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;User Connection manager.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UserConnectionManager.create"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a Connection. This works like get_or_create because we don&#39;t</span>
+<span class="sd">        want multiple connections created for the same users.</span>
+
+<span class="sd">        :param created: the user of the person creating the connection.</span>
+<span class="sd">        :param with_user: the user id of the person being requested</span>
+<span class="sd">            to connect</span>
+<span class="sd">        :param status: the status of the connection. Default is &#39;pending&#39;.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># First need to make sure the connection doesn&#39;t already exist.</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_for_users</span><span class="p">(</span><span class="n">user_1</span><span class="o">=</span><span class="n">created_user</span><span class="p">,</span> <span class="n">user_2</span><span class="o">=</span><span class="n">with_user</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">conn</span>
+
+        <span class="k">if</span> <span class="s">&#39;last_modified_user&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s">&#39;last_modified_user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">created_user</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionManager</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">created_user</span><span class="o">=</span><span class="n">created_user</span><span class="p">,</span>
+                                                         <span class="n">with_user</span><span class="o">=</span><span class="n">with_user</span><span class="p">,</span>
+                                                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UserConnectionManager.get_or_create"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_or_create">[docs]</a>    <span class="k">def</span> <span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">created_user</span><span class="p">,</span> <span class="n">with_user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets or creates a connection.</span>
+
+<span class="sd">        :param created: the user creating the connection.</span>
+<span class="sd">        :param with_user: the user to get or create the connection with.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_for_users</span><span class="p">(</span><span class="n">user_1</span><span class="o">=</span><span class="n">created_user</span><span class="p">,</span> <span class="n">user_2</span><span class="o">=</span><span class="n">with_user</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">conn</span><span class="p">,</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">created_user</span><span class="o">=</span><span class="n">created_user</span><span class="p">,</span>
+                           <span class="n">with_user</span><span class="o">=</span><span class="n">with_user</span><span class="p">,</span>
+                           <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="UserConnectionManager.get_for_users"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_for_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_for_users</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets a connection between two users.</span>
+
+<span class="sd">        :returns: single connection object between the two users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">created_user</span><span class="o">=</span><span class="n">user_1</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">created_user</span><span class="o">=</span><span class="n">user_2</span><span class="p">),</span>
+                            <span class="n">Q</span><span class="p">(</span><span class="n">with_user</span><span class="o">=</span><span class="n">user_2</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">with_user</span><span class="o">=</span><span class="n">user_1</span><span class="p">))</span>
+        <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="UserConnectionManager.get_by_user"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_by_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets all connections for a user for both connections this</span>
+<span class="sd">        user created as well as connections that were created by other with</span>
+<span class="sd">        this user.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_by_user_id</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UserConnectionManager.get_by_user_id"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_by_user_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_by_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets all connections for a user by a user id for both connections this</span>
+<span class="sd">        user created as well as connections that were created by other  with</span>
+<span class="sd">        this user.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">created_user__id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span> <span class="o">|</span>
+                           <span class="n">Q</span><span class="p">(</span><span class="n">with_user__id</span><span class="o">=</span><span class="n">user_id</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UserConnectionManager.get_user_ids"><a class="viewcode-back" href="../../apireference.html#django_user_connections.managers.UserConnectionManager.get_user_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets a set of all the user ids this user has connections with.&quot;&quot;&quot;</span>
+        <span class="c"># TODO: This should be cached since it&#39;s not something that will change</span>
+        <span class="c">#       very often.</span>
+        <span class="n">user_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_by_user_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span>
+                                                            <span class="s">&#39;created_user&#39;</span><span class="p">,</span>
+                                                            <span class="s">&#39;with_user&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user_ids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">conn_user_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">users</span> <span class="ow">in</span> <span class="n">user_ids</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">usr_id</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">usr_id</span> <span class="o">!=</span> <span class="n">user_id</span><span class="p">:</span>
+                    <span class="n">conn_user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">usr_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">conn_user_ids</span><span class="p">))</span></div></div>
+</pre></div>
+
+          <footer>
+  
+
+  <hr/>
+
+  <p>
+      &copy; Copyright 2013, Troy Grosfield.
+    Last updated on Dec 23, 2013.
+  </p>
+
+  <a href="https://www.github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="http://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>django_user_connections.models &mdash; django-user-connections 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'../../',
+        VERSION:'0.0.1',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+    <link rel="top" title="django-user-connections 0.0.1 documentation" href="../../index.html"/>
+        <link rel="up" title="django_user_connections" href="../django_user_connections.html"/> 
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../index.html" class="icon icon-home"> django-user-connections</a>
+        <form class="wy-form" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search docs" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apireference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#mixins">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections.constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apireference.html#module-django_user_connections">Helper Methods</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="/">django-user-connections</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <ul class="wy-breadcrumbs">
+  <li><a href="../../index.html">Docs</a> &raquo;</li>
+  <li><a href="">django_user_connections.models</a></li>
+  
+</ul>
+<hr/>
+
+          
+  <h1>Source code for django_user_connections.models</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+<span class="kn">from</span> <span class="nn">django_core.models.mixins.tokens</span> <span class="kn">import</span> <span class="n">AbstractTokenModel</span>
+<span class="kn">from</span> <span class="nn">django_core.models.mixins.base</span> <span class="kn">import</span> <span class="n">AbstractBaseModel</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">Status</span>
+<span class="kn">from</span> <span class="nn">.managers</span> <span class="kn">import</span> <span class="n">UserConnectionManager</span>
+
+
+<span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="AbstractUserConnection"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection">[docs]</a><span class="k">class</span> <span class="nc">AbstractUserConnection</span><span class="p">(</span><span class="n">AbstractTokenModel</span><span class="p">,</span> <span class="n">AbstractBaseModel</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fields</span>
+<span class="sd">    ======</span>
+
+<span class="sd">    * status = status of the connection. Can be one of</span>
+<span class="sd">        django_user_connections.constants.Status</span>
+<span class="sd">    * token = token shared between the two users</span>
+<span class="sd">    * user_ids  = list of user ids who are connected. This assumes that at most</span>
+<span class="sd">        2 people are connected.</span>
+<span class="sd">    * email_sent = boolean indicating if a connection email was sent once</span>
+<span class="sd">        a connection became accepted.</span>
+<span class="sd">    * activity_count = the total number of interactions between two users.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">PENDING</span><span class="p">,</span>
+                              <span class="n">choices</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">CHOICES</span><span class="p">)</span>
+    <span class="n">with_user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">User</span><span class="p">,</span>
+                                  <span class="n">related_name</span><span class="o">=</span><span class="s">&#39;connections&#39;</span><span class="p">,</span>
+                                  <span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">email_sent</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">activity_count</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">UserConnectionManager</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="AbstractUserConnection.users"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.users">[docs]</a>    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Property field gettings the two users the connection is for.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">created_user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_user</span><span class="p">]</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="AbstractUserConnection.user_ids"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.user_ids">[docs]</a>    <span class="k">def</span> <span class="nf">user_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the user ids of the two users connected.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">created_user_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_user_id</span><span class="p">]</span>
+</div>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">abstract</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="c"># TODO: might want an index_together on created_user and with_user</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;-id&#39;</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="AbstractUserConnection.accept"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.accept">[docs]</a>    <span class="k">def</span> <span class="nf">accept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Accepts a user connection.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">ACCEPTED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.decline"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.decline">[docs]</a>    <span class="k">def</span> <span class="nf">decline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Declines a user connection.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">DECLINED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.inactivate"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.inactivate">[docs]</a>    <span class="k">def</span> <span class="nf">inactivate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inactivate a user connection.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">INACTIVE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.is_accepted"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.is_accepted">[docs]</a>    <span class="k">def</span> <span class="nf">is_accepted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Boolean indicating if the status is accepted.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="n">ACCEPTED</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.is_pending"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.is_pending">[docs]</a>    <span class="k">def</span> <span class="nf">is_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Boolean indicating if the status is pending.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="n">PENDING</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.is_declined"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.is_declined">[docs]</a>    <span class="k">def</span> <span class="nf">is_declined</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Boolean indicating if the status is declined.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="n">DECLINED</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.is_inactive"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.is_inactive">[docs]</a>    <span class="k">def</span> <span class="nf">is_inactive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Boolean indicating if the status is inactive.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="n">INACTIVE</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.increment_activity_count"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.increment_activity_count">[docs]</a>    <span class="k">def</span> <span class="nf">increment_activity_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Increments total activity count for the connection between two</span>
+<span class="sd">        users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activity_count</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="s">&#39;activity_count&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AbstractUserConnection.increment_activity_count_by_users"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.increment_activity_count_by_users">[docs]</a>    <span class="k">def</span> <span class="nf">increment_activity_count_by_users</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">user_id_1</span><span class="p">,</span> <span class="n">user_id_2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Increments total activity count for the connection between two</span>
+<span class="sd">        users.</span>
+
+<span class="sd">        :param user_id_1: user id of the first user in a connection</span>
+<span class="sd">        :param user_id_2: user id of the second user in a connection</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_users</span><span class="p">(</span><span class="n">user_id_1</span><span class="p">,</span> <span class="n">user_id_2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">conn</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">increment_activity_count</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="AbstractUserConnection.get_connected_user"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.AbstractUserConnection.get_connected_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_connected_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the user who&#39;s not the user param passed in.</span>
+
+<span class="sd">        :param user: return the user who&#39;s not this user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">user</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+</div></div>
+<div class="viewcode-block" id="UserConnection"><a class="viewcode-back" href="../../apireference.html#django_user_connections.models.UserConnection">[docs]</a><span class="k">class</span> <span class="nc">UserConnection</span><span class="p">(</span><span class="n">AbstractUserConnection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concrete class for user connections.&quot;&quot;&quot;</span></div>
+</pre></div>
+
+          <footer>
+  
+
+  <hr/>
+
+  <p>
+      &copy; Copyright 2013, Troy Grosfield.
+    Last updated on Dec 23, 2013.
+  </p>
+
+  <a href="https://www.github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="http://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>

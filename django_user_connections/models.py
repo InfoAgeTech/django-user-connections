@@ -13,18 +13,16 @@ User = get_user_model()
 
 
 class AbstractUserConnection(AbstractTokenModel, AbstractBaseModel):
-    """
-    Fields
-    ======
+    """Abstract user connection model.
 
-    * status = status of the connection. Can be one of
+    :field status: status of the connection. Can be one of
         django_user_connections.constants.Status
-    * token = token shared between the two users
-    * user_ids  = list of user ids who are connected. This assumes that at most
+    :field token: token shared between the two users
+    :field user_ids: list of user ids who are connected. This assumes that at most
         2 people are connected.
-    * email_sent = boolean indicating if a connection email was sent once
+    :field email_sent: boolean indicating if a connection email was sent once
         a connection became accepted.
-    * activity_count = the total number of interactions between two users.
+    :field activity_count: the total number of interactions between two users.
     """
 
     status = models.CharField(max_length=25,

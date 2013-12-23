@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>django_user_connections.mixins.views &mdash; django-user-connections 0.0.1 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'../../../',
+        VERSION:'0.0.1',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+    <link rel="top" title="django-user-connections 0.0.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="django_user_connections" href="../../django_user_connections.html"/> 
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        <a href="../../../index.html" class="icon icon-home"> django-user-connections</a>
+        <form class="wy-form" action="../../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search docs" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix">
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../apireference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#mixins">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.templatetags.user_connection_tags">Template Tags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections.constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../apireference.html#module-django_user_connections">Helper Methods</a></li>
+</ul>
+</li>
+</ul>
+
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top">
+        <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+        <a href="/">django-user-connections</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <ul class="wy-breadcrumbs">
+  <li><a href="../../../index.html">Docs</a> &raquo;</li>
+  <li><a href="">django_user_connections.mixins.views</a></li>
+  
+</ul>
+<hr/>
+
+          
+  <h1>Source code for django_user_connections.mixins.views</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django_user_connections</span> <span class="kn">import</span> <span class="n">get_user_connection_model</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">Status</span>
+
+
+<span class="n">User</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span>
+<span class="n">UserConnection</span> <span class="o">=</span> <span class="n">get_user_connection_model</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="UserConnectionViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets a user connection by the user connection_id from the url.  The</span>
+<span class="sd">    user connection can be retrieved in one of three ways via url args.</span>
+
+<span class="sd">    1) &lt;connection_id&gt; - this can be one of two things:</span>
+<span class="sd">        1) the actual id of the user connection.  This is assumed to be a digit</span>
+<span class="sd">           value.</span>
+<span class="sd">        2) username. The connection id can also be a username since a username</span>
+<span class="sd">           must include at least one character value and will not be all</span>
+<span class="sd">           digits.</span>
+<span class="sd">    2) &lt;connection_token&gt; = this is the token for the user connection.</span>
+
+<span class="sd">    This view mixin places the following attributes on the view:</span>
+
+<span class="sd">    * connection_id_pk_url_kwarg: the url primary key for the connection.</span>
+<span class="sd">        Defaults to &#39;connection_id&#39;.  This value assumes that if you&#39;re using</span>
+<span class="sd">        an all digit value that it&#39;s referring to a connection id.  If the</span>
+<span class="sd">        value is not a digit, it will try to get the connection by username.</span>
+<span class="sd">    * user_connection: the UserConnection object for the users connected.</span>
+<span class="sd">    * connection_user: the user the authenticated user is connected with.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pk_url_kwarg</span> <span class="o">=</span> <span class="s">&#39;connection_id&#39;</span>
+    <span class="n">connection_id_pk_url_kwarg</span> <span class="o">=</span> <span class="s">&#39;connection_id&#39;</span>
+    <span class="n">user_connection</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">connection_user</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">UserConnection</span>
+    <span class="n">context_object_name</span> <span class="o">=</span> <span class="s">&#39;user_connection&#39;</span>
+
+    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">connection_key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection_id_pk_url_kwarg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s">&#39;connection_token&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="c"># Attempting to get the user connection by the connection token.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span> <span class="o">=</span> <span class="n">UserConnection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_by_token_or_404</span><span class="p">(</span>
+                                        <span class="n">token</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;connection_token&#39;</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">connection_key</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="c"># It&#39;s the connection primary key object (integer).</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span> <span class="o">=</span> <span class="n">UserConnection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_by_id_or_404</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection_id_pk_url_kwarg</span><span class="p">),</span>
+                                <span class="n">prefetch_related</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;with_user&#39;</span><span class="p">,))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># The connection key is a username (string)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">==</span> <span class="n">connection_key</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">connection_user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">connection_key</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Http404</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span> <span class="o">=</span> <span class="n">UserConnection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_for_users</span><span class="p">(</span>
+                            <span class="n">user_1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                            <span class="n">user_2</span><span class="o">=</span><span class="n">connection_user</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">Http404</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span><span class="o">.</span><span class="n">user_ids</span><span class="p">:</span>
+            <span class="c"># This connection doesn&#39;t belong to the authenticated user</span>
+            <span class="k">raise</span> <span class="n">Http404</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span><span class="o">.</span><span class="n">get_connected_user</span><span class="p">(</span>
+                                                        <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span>
+                                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connection&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;connection_user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_user</span>
+        <span class="k">return</span> <span class="n">context</span>
+
+</div>
+<span class="k">class</span> <span class="nc">UserConnectionSingleObjectViewMixin</span><span class="p">(</span><span class="n">UserConnectionViewMixin</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connection</span>
+
+
+<div class="viewcode-block" id="BaseUserConnectionsViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.BaseUserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">BaseUserConnectionsViewMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base user connection mixin.&quot;&quot;&quot;</span>
+    <span class="n">user_connections</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">get_user_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">UserConnection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_by_user</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span>
+                                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                              <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;-activity_count&#39;</span><span class="p">)</span>
+                              <span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s">&#39;created_user&#39;</span><span class="p">,</span>
+                                                <span class="s">&#39;with_user&#39;</span><span class="p">))</span>
+
+</div>
+<div class="viewcode-block" id="UserConnectionsViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsViewMixin</span><span class="p">(</span><span class="n">BaseUserConnectionsViewMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;View mixin for getting the authenticated user&#39;s connections.</span>
+
+<span class="sd">    * user_connections_accepted: queryset of accepted user connections</span>
+<span class="sd">    * user_connections_declined: queryset of declined user connections</span>
+<span class="sd">    * user_connections_pending: queryset of pending user connections</span>
+<span class="sd">    * user_connections_inactivated: queryset of inactivated user connections</span>
+<span class="sd">    * connection_user_ids: a list of user ids the authenticated user is</span>
+<span class="sd">        connected with.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_connections_accepted</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">user_connections_declined</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">user_connections_pending</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">user_connections_inactivated</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">connection_user_ids</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="UserConnectionsViewMixin.dispatch"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsViewMixin.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Puts the querysets by type on the view.  The benefit to this the</span>
+<span class="sd">        query only runs when you want that type of user connection status. So</span>
+<span class="sd">        if no pending connection are wanted, no queries are run for that type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_connections</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_accepted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                                                        <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">ACCEPTED</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_declined</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                                                        <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">DECLINED</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_pending</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                                                        <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">PENDING</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_inactivated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                                                        <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">INACTIVE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_user_ids</span> <span class="o">=</span> <span class="n">UserConnection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_user_ids</span><span class="p">(</span>
+                                                <span class="n">user_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionsViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionsViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span>
+                                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections</span>
+        <span class="c"># I could also create lambda functions here that just sorts through</span>
+        <span class="c"># the user_connections to get the correct status&#39;.  The problem with</span>
+        <span class="c"># that is I can&#39;t filter the query further by leveraging a queryset.</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections_accepted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_accepted</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections_declined&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_declined</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections_pending&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_pending</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections_inactivated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_inactivated</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;connection_user_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_user_ids</span>
+        <span class="k">return</span> <span class="n">context</span>
+
+</div>
+<div class="viewcode-block" id="UserConnectionsByUserViewMixin"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin">[docs]</a><span class="k">class</span> <span class="nc">UserConnectionsByUserViewMixin</span><span class="p">(</span><span class="n">UserConnectionsViewMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;View mixin for getting the authenticated user&#39;s connections and orders</span>
+<span class="sd">    them by activity count and returns a tuple of the user connected with along</span>
+<span class="sd">    with the connection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_connections_by_user</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">connections_page_size</span> <span class="o">=</span> <span class="mi">25</span>
+
+    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_by_user</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">get_connected_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">conn</span>
+            <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_connections</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">ACCEPTED</span><span class="p">)[:</span><span class="mi">100</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionsByUserViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
+                                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UserConnectionsByUserViewMixin.get_context_data"><a class="viewcode-back" href="../../../apireference.html#django_user_connections.mixins.views.UserConnectionsByUserViewMixin.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param page_size: the number of connections to return</span>
+<span class="sd">        :return: tuple with the connected user being the first part, the second</span>
+<span class="sd">            part being the UserConnection object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserConnectionsByUserViewMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span>
+                                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s">&#39;user_connections_by_user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_connections_by_user</span>
+        <span class="k">return</span> <span class="n">context</span></div></div>
+</pre></div>
+
+          <footer>
+  
+
+  <hr/>
+
+  <p>
+      &copy; Copyright 2013, Troy Grosfield.
+    Last updated on Dec 23, 2013.
+  </p>
+
+  <a href="https://www.github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="http://readthedocs.org">Read the Docs</a>
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+</body>
+</html>
