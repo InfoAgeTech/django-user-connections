@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth import get_user_model
-from django.test.testcases import TestCase
+from django_testing.testcases.users import SingleUserTestCase
 from django_testing.user_utils import create_user
 from django_user_connections import get_user_connection_model
 from django_user_connections.constants import Status
@@ -11,12 +11,7 @@ User = get_user_model()
 UserConnection = get_user_connection_model()
 
 
-class ConnectionTestCase(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestCase, cls).setUpClass()
-        cls.user = create_user()
+class UserConnectionTestCase(SingleUserTestCase):
 
     def test_accept_connection(self):
         """Test for accepting a connection."""
@@ -63,7 +58,8 @@ class ConnectionTestCase(TestCase):
                                          with_user=user_2)
 
         self.assertEqual(conn.activity_count, 1)
-        UserConnection.increment_activity_count_by_users(user_id_1=self.user.id,
+        UserConnection.increment_activity_count_by_users(
+                                                     user_id_1=self.user.id,
                                                      user_id_2=user_2.id)
 
         conn = UserConnection.objects.get(id=conn.id)
@@ -75,8 +71,7 @@ class ConnectionTestCase(TestCase):
         users = [create_user() for i in range(10)]
 
         for user in users:
-            conn = UserConnection.objects.create(created_user=user_2,
-                                             with_user=user)
+            UserConnection.objects.create(created_user=user_2, with_user=user)
 
         connections = UserConnection.objects.get_by_user_id(user_id=user_2.id)
         self.assertEqual(len(connections), 10)
@@ -89,9 +84,11 @@ class ConnectionTestCase(TestCase):
                                          with_user=user_2,
                                          status=Status.PENDING)
 
-        conn_1 = UserConnection.objects.get_for_users(user_1=self.user, user_2=user_2)
+        conn_1 = UserConnection.objects.get_for_users(user_1=self.user,
+                                                      user_2=user_2)
         self.assertEqual(conn, conn_1)
-        conn_2 = UserConnection.objects.get_for_users(user_1=user_2, user_2=self.user)
+        conn_2 = UserConnection.objects.get_for_users(user_1=user_2,
+                                                      user_2=self.user)
         self.assertEqual(conn, conn_2)
 
     def test_get_by_token(self):
@@ -137,3 +134,23 @@ class ConnectionTestCase(TestCase):
 
         user_3 = create_user()
         self.assertIsNone(c.get_connected_user(user_3))
+
+
+class UserConnectionExtensionTests(SingleUserTestCase):
+    """TestCase for adding custom managers or mixins to the UserConnection
+    model.
+    """
+
+    def test_method_added_to_user_connections_model(self):
+        user_2 = create_user()
+        c = UserConnection.objects.create(created_user=self.user,
+                                          with_user=user_2,
+                                          status=Status.ACCEPTED)
+        self.assertTrue(hasattr(c, 'my_test_method'))
+        self.assertEqual(c.my_test_method(), 'worked')
+
+    def test_model_manager_extended(self):
+        self.assertTrue(hasattr(UserConnection.objects,
+                                'my_new_manager_method'))
+        self.assertEqual(UserConnection.objects.my_new_manager_method(),
+                         'works')

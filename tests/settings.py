@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 
+USER_CONNECTION_MODEL_MIXIN = 'tests.test_models.AbstractUserConnectionMixin'
+USER_CONNECTION_MANAGER = 'tests.test_models.managers.UserConnectionManager'
+
 # Do not run in DEBUG in production!!!
 DEBUG = False
 
@@ -29,6 +32,7 @@ INSTALLED_APPS = (
     'django_core',
     'django_nose',
     'python_tools',
+    'test_models',
 )
 
 SECRET_KEY = '12345abcd'

@@ -2,17 +2,31 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
-from django_core.models.mixins.tokens import AbstractTokenModel
 from django_core.models.mixins.base import AbstractBaseModel
+from django_core.models.mixins.tokens import AbstractTokenModel
+from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
-from .managers import UserConnectionManager
 
 
 User = get_user_model()
 
+try:
+    AbstractUserConnectionMixin = get_class_from_settings(
+                                    settings_key='USER_CONNECTION_MODEL_MIXIN')
+except NotImplementedError:
+    from django_core.models.mixins.hooks import AbstractHookModelMixin \
+                                             as AbstractUserConnectionMixin
 
-class AbstractUserConnection(AbstractTokenModel, AbstractBaseModel):
+try:
+    UserConnectionManager = get_class_from_settings(
+                                        settings_key='USER_CONNECTION_MANAGER')
+except NotImplementedError:
+    from .managers import UserConnectionManager
+
+
+class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
+                             AbstractBaseModel):
     """Abstract user connection model.
 
     :field status: status of the connection. Can be one of
