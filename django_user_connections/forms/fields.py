@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms.fields import ChoiceField
 from django.forms.fields import MultipleChoiceField
 from django.forms.widgets import CheckboxSelectMultiple
+from django.utils.six import string_types
 from django.utils.translation import ugettext as _
 
 
@@ -206,7 +207,7 @@ class UserConnectionChoiceField(BaseUserConnectionChoiceField, ChoiceField):
             else:
                 # It's a user id, get the user from the user connections
                 self._initial = self.get_token_by_user_id(value)
-        elif value and not isinstance(value, basestring):
+        elif value and not isinstance(value, string_types):
 
             # Try getting from a user
             try:

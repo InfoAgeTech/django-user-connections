@@ -7,3 +7,4 @@
 .settings
 .idea
 docs/guide
+__pycache__
