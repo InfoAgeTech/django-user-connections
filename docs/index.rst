@@ -1,5 +1,5 @@
-Welcome to django-notifications's documentation!
-================================================
+Welcome to django-user-connections documentation!
+=================================================
 
 .. toctree::
    :maxdepth: 2
