@@ -1,11 +1,11 @@
 NOTE: This is not stable yet and will likely change!  Please don't use in production until the 1.0 release.
 
-.. image:: https://badge.fury.io/py/django-user-connections.png
-    :target: http://badge.fury.io/py/django-user-connections
 .. image:: https://travis-ci.org/InfoAgeTech/django-user-connections.png?branch=master
     :target: http://travis-ci.org/InfoAgeTech/django-user-connections
 .. image:: https://coveralls.io/repos/InfoAgeTech/django-user-connections/badge.png
     :target: https://coveralls.io/r/InfoAgeTech/django-user-connections
+.. image:: https://badge.fury.io/py/django-user-connections.png
+    :target: http://badge.fury.io/py/django-user-connections
 .. image:: https://pypip.in/license/django-user-connections/badge.png
     :target: https://pypi.python.org/pypi/django-user-connections/
 
