@@ -7,7 +7,7 @@ NOTE: This is not stable yet and will likely change!  Please don't use in produc
 .. image:: https://badge.fury.io/py/django-user-connections.png
     :target: http://badge.fury.io/py/django-user-connections
 .. image:: https://pypip.in/license/django-user-connections/badge.png
-    :target: https://pypi.python.org/pypi/django-user-connections/
+    :target: https://github.com/InfoAgeTech/django-user-connections/blob/master/LICENSE
 
 =======================
 django-user-connections
