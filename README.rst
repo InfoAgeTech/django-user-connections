@@ -1,23 +1,24 @@
 NOTE: This is not stable yet and will likely change!  Please don't use in production until the 1.0 release.
 
-.. image:: https://travis-ci.org/InfoAgeTech/django-user-connections.png?branch=master
+.. |travis-ci| image:: https://travis-ci.org/InfoAgeTech/django-user-connections.png?branch=master
     :target: http://travis-ci.org/InfoAgeTech/django-user-connections
-.. image:: https://coveralls.io/repos/InfoAgeTech/django-user-connections/badge.png
+    :alt: Travis CI
+.. |coveralls| image:: https://coveralls.io/repos/InfoAgeTech/django-user-connections/badge.png
     :target: https://coveralls.io/r/InfoAgeTech/django-user-connections
-.. image:: https://badge.fury.io/py/django-user-connections.png
+    :alt: Code Coverage
+.. |version| image:: https://badge.fury.io/py/django-user-connections.png
     :target: http://badge.fury.io/py/django-user-connections
-.. image:: https://pypip.in/license/django-user-connections/badge.png
+    :alt: Version
+.. |license| image:: https://pypip.in/license/django-user-connections/badge.png
     :target: https://github.com/InfoAgeTech/django-user-connections/blob/master/LICENSE
+    :alt: MIT License
+
+|travis-ci| |coveralls| |version| |license| | `Documentation <http://django-user-connections.readthedocs.org>`_
 
 =======================
 django-user-connections
 =======================
 django-user-connections is a python module written for django that handles user connections.
-
-Docs
-====
-
-http://django-user-connections.readthedocs.org
 
 Intallation
 ===========
