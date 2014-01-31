@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
-from django_core.db.models import AbstractBaseModel
+from django_core.db.models.mixins.base import AbstractBaseModel
 from django_core.db.models import AbstractTokenModel
 from django_core.utils.loading import get_class_from_settings
 
