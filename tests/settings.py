@@ -31,7 +31,6 @@ INSTALLED_APPS = (
     'django_testing',
     'django_core',
     'django_nose',
-    'python_tools',
     'test_models',
 )
 
