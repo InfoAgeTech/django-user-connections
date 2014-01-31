@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
-from django_core.db.models.mixins.base import AbstractBaseModel
-from django_core.db.models.mixins.tokens import AbstractTokenModel
+from django_core.db.models import AbstractBaseModel
+from django_core.db.models import AbstractTokenModel
 from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
@@ -15,8 +16,8 @@ try:
     AbstractUserConnectionMixin = get_class_from_settings(
                                     settings_key='USER_CONNECTION_MODEL_MIXIN')
 except NotImplementedError:
-    from django_core.db.models.mixins.hooks import AbstractHookModelMixin \
-                                             as AbstractUserConnectionMixin
+    from django_core.db.models import AbstractHookModelMixin \
+                                   as AbstractUserConnectionMixin
 
 try:
     UserConnectionManager = get_class_from_settings(
