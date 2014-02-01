@@ -25,7 +25,7 @@ setup(
     long_description=README,
     author='Troy Grosfield',
     maintainer='Troy Grosfield',
-    url='https://github.com/InfoAgeTech/django-user-connections',
+    url='https://github.com/infoagetech/django-user-connections',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
