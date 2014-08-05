@@ -159,7 +159,7 @@ class BaseUserConnectionChoiceField(BaseUserConnectionFieldMixin):
     def _update_choices(self):
         super(BaseUserConnectionChoiceField, self)._update_choices()
 
-        if not self.required and self.empty_label != None:
+        if not self.required and self.empty_label is not None:
             self.choices.insert(0, ('', self.empty_label))
 
 
