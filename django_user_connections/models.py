@@ -14,14 +14,14 @@ User = get_user_model()
 
 try:
     AbstractUserConnectionMixin = get_class_from_settings(
-                                    settings_key='USER_CONNECTION_MODEL_MIXIN')
+        settings_key='USER_CONNECTION_MODEL_MIXIN')
 except NotImplementedError:
     from django_core.db.models import AbstractHookModelMixin \
                                    as AbstractUserConnectionMixin
 
 try:
     UserConnectionManager = get_class_from_settings(
-                                        settings_key='USER_CONNECTION_MANAGER')
+        settings_key='USER_CONNECTION_MANAGER')
 except NotImplementedError:
     from .managers import UserConnectionManager
 
@@ -33,8 +33,8 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
     :field status: status of the connection. Can be one of
         django_user_connections.constants.Status
     :field token: token shared between the two users
-    :field user_ids: list of user ids who are connected. This assumes that at most
-        2 people are connected.
+    :field user_ids: list of user ids who are connected. This assumes that at
+        most 2 people are connected.
     :field email_sent: boolean indicating if a connection email was sent once
         a connection became accepted.
     :field activity_count: the total number of interactions between two users.
