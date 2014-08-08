@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import F
-from django_core.db.models.mixins.base import AbstractBaseModel
 from django_core.db.models import AbstractTokenModel
+from django_core.db.models.mixins.base import AbstractBaseModel
 from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
@@ -32,7 +32,7 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
     """Abstract user connection model.
 
     :field status: status of the connection. Can be one of
-        django_user_connections.constants.Status
+        user_connections.constants.Status
     :field token: token shared between the two users
     :field user_ids: list of user ids who are connected. This assumes that at
         most 2 people are connected.

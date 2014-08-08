@@ -1,4 +1,6 @@
-from django_user_connections.managers import UserConnectionManager \
+from __future__ import unicode_literals
+
+from user_connections.managers import UserConnectionManager \
                                           as BaseUserConnectionManager
 
 

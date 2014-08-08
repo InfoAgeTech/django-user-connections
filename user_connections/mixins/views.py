@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from django.contrib.auth import get_user_model
 from django.http.response import Http404
 from django.shortcuts import redirect
-from django_user_connections import get_user_connection_model
 
+from .. import get_user_connection_model
 from ..constants import Status
 
 
@@ -46,12 +46,12 @@ class UserConnectionViewMixin(object):
         if 'connection_token' in kwargs:
             # Attempting to get the user connection by the connection token.
             self.user_connection = UserConnection.objects.get_by_token_or_404(
-                                        token=kwargs.get('connection_token'))
+                token=kwargs.get('connection_token'))
         elif connection_key.isdigit():
             # It's the connection primary key object (integer).
             self.user_connection = UserConnection.objects.get_by_id_or_404(
-                                id=kwargs.get(self.connection_id_pk_url_kwarg),
-                                prefetch_related=('with_user',))
+                id=kwargs.get(self.connection_id_pk_url_kwarg),
+                prefetch_related=('with_user',))
 
         else:
             # The connection key is a username (string)
@@ -64,8 +64,8 @@ class UserConnectionViewMixin(object):
                 raise Http404
 
             self.user_connection = UserConnection.objects.get_for_users(
-                            user_1=self.request.user,
-                            user_2=connection_user)
+                user_1=self.request.user,
+                user_2=connection_user)
 
             if not self.user_connection:
                 raise Http404
@@ -75,12 +75,12 @@ class UserConnectionViewMixin(object):
             raise Http404
 
         self.connection_user = self.user_connection.get_connected_user(
-                                                        user=self.request.user)
+            user=self.request.user)
         return super(UserConnectionViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(UserConnectionViewMixin, self).get_context_data(
-                                                                    **kwargs)
+        context = super(UserConnectionViewMixin,
+                        self).get_context_data(**kwargs)
         context['user_connection'] = self.user_connection
         context['connection_user'] = self.connection_user
         return context
@@ -130,20 +130,20 @@ class UserConnectionsViewMixin(BaseUserConnectionsViewMixin):
         """
         self.user_connections = self.get_user_connections()
         self.user_connections_accepted = self.user_connections.filter(
-                                                        status=Status.ACCEPTED)
+            status=Status.ACCEPTED)
         self.user_connections_declined = self.user_connections.filter(
-                                                        status=Status.DECLINED)
+            status=Status.DECLINED)
         self.user_connections_pending = self.user_connections.filter(
-                                                        status=Status.PENDING)
+            status=Status.PENDING)
         self.user_connections_inactivated = self.user_connections.filter(
-                                                        status=Status.INACTIVE)
+            status=Status.INACTIVE)
         self.connection_user_ids = UserConnection.objects.get_user_ids(
-                                                user_id=self.request.user.id)
+            user_id=self.request.user.id)
         return super(UserConnectionsViewMixin, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(UserConnectionsViewMixin, self).get_context_data(
-                                                                    **kwargs)
+        context = super(UserConnectionsViewMixin,
+                        self).get_context_data(**kwargs)
         context['user_connections'] = self.user_connections
         # I could also create lambda functions here that just sorts through
         # the user_connections to get the correct status'.  The problem with
@@ -178,7 +178,7 @@ class UserConnectionsByUserViewMixin(UserConnectionsViewMixin):
         :return: tuple with the connected user being the first part, the second
             part being the UserConnection object.
         """
-        context = super(UserConnectionsByUserViewMixin, self).get_context_data(
-                                                                    **kwargs)
+        context = super(UserConnectionsByUserViewMixin,
+                        self).get_context_data(**kwargs)
         context['user_connections_by_user'] = self.user_connections_by_user
         return context

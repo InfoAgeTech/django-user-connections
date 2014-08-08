@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
 
 USER_CONNECTION_MODEL_MIXIN = 'tests.test_models.AbstractUserConnectionMixin'
@@ -27,11 +28,11 @@ USE_I18N = True
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django_user_connections',
     'django_testing',
     'django_core',
     'django_nose',
     'test_models',
+    'user_connections',
 )
 
 SECRET_KEY = '12345abcd'
