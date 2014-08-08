@@ -13,6 +13,7 @@ from .constants import Status
 User = get_user_model()
 
 try:
+    # See doc around django_core.db.models.AbstractHookModelMixin
     AbstractUserConnectionMixin = get_class_from_settings(
         settings_key='USER_CONNECTION_MODEL_MIXIN')
 except NotImplementedError:
@@ -35,9 +36,10 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
     :field token: token shared between the two users
     :field user_ids: list of user ids who are connected. This assumes that at
         most 2 people are connected.
-    :field email_sent: boolean indicating if a connection email was sent once
-        a connection became accepted.
     :field activity_count: the total number of interactions between two users.
+        This field becomes useful when you want to start sorting user
+        connections by relevance.  The higher the activity count, the more
+        likely these two users are interested in each other.
     """
 
     status = models.CharField(max_length=25,
@@ -46,7 +48,6 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
     with_user = models.ForeignKey(User,
                                   related_name='connections',
                                   db_index=True)
-    email_sent = models.BooleanField(default=False)
     activity_count = models.IntegerField(default=1)
     objects = UserConnectionManager()
 
@@ -62,7 +63,7 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
 
     class Meta:
         abstract = True
-        # TODO: might want an index_together on created_user and with_user
+        index_together = (('created_user', 'with_user'),)
         ordering = ('-id',)
 
     def accept(self):

@@ -21,8 +21,8 @@ class ConnectionManagerTestCase(TestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2,
-                                         status=Status.PENDING)
+                                             with_user=user_2,
+                                             status=Status.PENDING)
 
         self.assertEqual(conn.activity_count, 1)
         self.assertEqual(conn.status, Status.PENDING)
@@ -38,8 +38,8 @@ class ConnectionManagerTestCase(TestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2,
-                                         status=Status.ACCEPTED)
+                                             with_user=user_2,
+                                             status=Status.ACCEPTED)
 
         self.assertEqual(conn.activity_count, 1)
         self.assertEqual(conn.status, Status.ACCEPTED)
@@ -54,12 +54,14 @@ class ConnectionManagerTestCase(TestCase):
         """Test get or create object manager method."""
         user_2 = User.objects.create()
 
-        conn, is_created = UserConnection.objects.get_or_create(created_user=self.user,
-                                                            with_user=user_2)
+        conn, is_created = UserConnection.objects.get_or_create(
+            created_user=self.user,
+            with_user=user_2)
         self.assertTrue(is_created)
 
-        conn_3, is_created = UserConnection.objects.get_or_create(created_user=self.user,
-                                                              with_user=user_2)
+        conn_3, is_created = UserConnection.objects.get_or_create(
+            created_user=self.user,
+            with_user=user_2)
         self.assertFalse(is_created)
         self.assertEqual(conn, conn_3)
 
@@ -68,13 +70,13 @@ class ConnectionManagerTestCase(TestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2)
+                                             with_user=user_2)
 
         conn_db = UserConnection.objects.get_for_users(user_1=self.user,
-                                                   user_2=user_2)
+                                                       user_2=user_2)
         self.assertEqual(conn, conn_db)
 
         conn_db_2 = UserConnection.objects.get_for_users(user_1=user_2,
-                                                     user_2=self.user)
+                                                         user_2=self.user)
 
         self.assertEqual(conn, conn_db_2)

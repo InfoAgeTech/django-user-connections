@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from django.db.models.query_utils import Q
 from django_core.db.models import CommonManager
@@ -27,9 +27,11 @@ class UserConnectionManager(TokenManager, CommonManager):
         if 'last_modified_user' not in kwargs:
             kwargs['last_modified_user'] = created_user
 
-        return super(UserConnectionManager, self).create(created_user=created_user,
-                                                         with_user=with_user,
-                                                         **kwargs)
+        return super(UserConnectionManager, self).create(
+            created_user=created_user,
+            with_user=with_user,
+            **kwargs
+        )
 
     def get_or_create(self, created_user, with_user, **kwargs):
         """Gets or creates a connection.
@@ -53,8 +55,8 @@ class UserConnectionManager(TokenManager, CommonManager):
         :returns: single connection object between the two users.
         """
         try:
-            return self.get(Q(created_user=user_1) | Q(created_user=user_2),
-                            Q(with_user=user_2) | Q(with_user=user_1))
+            return self.get((Q(created_user=user_1) & Q(with_user=user_2)) |
+                            (Q(created_user=user_2) & Q(with_user=user_1)))
         except self.model.DoesNotExist:
             return None
 
@@ -67,10 +69,9 @@ class UserConnectionManager(TokenManager, CommonManager):
         return self.get_by_user_id(user_id=user.id, **kwargs)
 
     def get_by_user_id(self, user_id, **kwargs):
-        """Gets all connections for a user by a user id for both connections this
-        user created as well as connections that were created by other  with
-        this user.
-
+        """Gets all connections for a user by a user id for both connections
+        this user created as well as connections that were created by other
+        with this user.
         """
         return self.filter(Q(created_user__id=user_id) |
                            Q(with_user__id=user_id)).filter(**kwargs)
@@ -80,8 +81,9 @@ class UserConnectionManager(TokenManager, CommonManager):
         # TODO: This should be cached since it's not something that will change
         #       very often.
         user_ids = self.get_by_user_id(user_id, **kwargs).values_list(
-                                                            'created_user',
-                                                            'with_user')
+            'created_user',
+            'with_user'
+        )
 
         if not user_ids:
             return []
