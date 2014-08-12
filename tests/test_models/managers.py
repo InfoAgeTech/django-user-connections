@@ -5,7 +5,7 @@ from user_connections.managers import UserConnectionManager \
 
 
 class UserConnectionManager(BaseUserConnectionManager):
-    """Test manager for overriding the Notification's manager."""
+    """Test manager for overriding the UserConnection's manager."""
 
     def my_new_manager_method(self):
         return 'works'

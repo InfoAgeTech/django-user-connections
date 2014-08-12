@@ -21,7 +21,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 setup(
     name='django-user-connections',
     version='0.0.1',
-    description='Notifications app for django',
+    description='User connections app for django',
     long_description=README,
     author='Troy Grosfield',
     maintainer='Troy Grosfield',
