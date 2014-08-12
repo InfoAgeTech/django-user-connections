@@ -215,7 +215,7 @@ class UserConnectionChoiceField(BaseUserConnectionChoiceField, ChoiceField):
                 self._initial = self.get_token_by_user(value)
             except:
                 self._initial = value
-        elif value == None:
+        elif value is None:
             self._initial = 'self'
         else:
             self._initial = value
