@@ -30,7 +30,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django_testing',
     'django_core',
-    'django_nose',
     'test_models',
     'user_connections',
 )
@@ -38,7 +37,6 @@ INSTALLED_APPS = (
 SECRET_KEY = '12345abcd'
 ALLOWED_HOSTS = ['*']
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 
