@@ -3,12 +3,10 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django_testing.user_utils import create_user
-
 from user_connections import get_user_connection_model
 from user_connections.constants import Status
 
 
-User = get_user_model()
 UserConnection = get_user_connection_model()
 
 
@@ -55,7 +53,7 @@ class ConnectionManagerTestCase(TestCase):
 
     def test_get_or_create(self):
         """Test get or create object manager method."""
-        user_2 = User.objects.create()
+        user_2 = get_user_model().objects.create()
 
         conn, is_created = UserConnection.objects.get_or_create(
             created_user=self.user,

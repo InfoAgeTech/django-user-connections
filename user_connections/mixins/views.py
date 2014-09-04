@@ -8,7 +8,6 @@ from .. import get_user_connection_model
 from ..constants import Status
 
 
-User = get_user_model()
 UserConnection = get_user_connection_model()
 
 
@@ -57,6 +56,8 @@ class UserConnectionViewMixin(object):
             # The connection key is a username (string)
             if self.request.user.username == connection_key:
                 return redirect('/')
+
+            User = get_user_model()
 
             try:
                 connection_user = User.objects.get(username=connection_key)

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.db.models import F
 from django_core.db.models import AbstractTokenModel
@@ -9,8 +9,6 @@ from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
 
-
-User = get_user_model()
 
 try:
     # See doc around django_core.db.models.AbstractHookModelMixin
@@ -45,7 +43,7 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
     status = models.CharField(max_length=25,
                               default=Status.PENDING,
                               choices=Status.CHOICES)
-    with_user = models.ForeignKey(User,
+    with_user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='connections',
                                   db_index=True)
     activity_count = models.IntegerField(default=1)

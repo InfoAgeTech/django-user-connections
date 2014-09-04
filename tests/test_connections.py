@@ -1,14 +1,11 @@
 from __future__ import unicode_literals
 
-from django.contrib.auth import get_user_model
 from django_testing.testcases.users import SingleUserTestCase
 from django_testing.user_utils import create_user
-
 from user_connections import get_user_connection_model
 from user_connections.constants import Status
 
 
-User = get_user_model()
 UserConnection = get_user_connection_model()
 
 
@@ -56,12 +53,13 @@ class UserConnectionTestCase(SingleUserTestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2)
+                                             with_user=user_2)
 
         self.assertEqual(conn.activity_count, 1)
         UserConnection.increment_activity_count_by_users(
-                                                     user_id_1=self.user.id,
-                                                     user_id_2=user_2.id)
+            user_id_1=self.user.id,
+            user_id_2=user_2.id
+        )
 
         conn = UserConnection.objects.get(id=conn.id)
         self.assertEqual(conn.activity_count, 2)
@@ -82,8 +80,8 @@ class UserConnectionTestCase(SingleUserTestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2,
-                                         status=Status.PENDING)
+                                             with_user=user_2,
+                                             status=Status.PENDING)
 
         conn_1 = UserConnection.objects.get_for_users(user_1=self.user,
                                                       user_2=user_2)
@@ -97,8 +95,8 @@ class UserConnectionTestCase(SingleUserTestCase):
         user_2 = create_user()
 
         conn = UserConnection.objects.create(created_user=self.user,
-                                         with_user=user_2,
-                                         status=Status.PENDING)
+                                             with_user=user_2,
+                                             status=Status.PENDING)
 
         conn_2 = UserConnection.objects.get_by_token(token=conn.token)
 
@@ -113,12 +111,12 @@ class UserConnectionTestCase(SingleUserTestCase):
         """Testing deleting a connection."""
         user_2 = create_user()
         c = UserConnection.objects.create(created_user=self.user,
-                                      with_user=user_2,
-                                      status=Status.ACCEPTED)
+                                          with_user=user_2,
+                                          status=Status.ACCEPTED)
         c.delete()
 
         conn_1 = UserConnection.objects.get_for_users(user_1=self.user,
-                                                  user_2=user_2)
+                                                      user_2=user_2)
         self.assertIsNone(conn_1)
 
     def test_get_connected_user(self):
