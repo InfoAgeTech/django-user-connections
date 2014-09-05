@@ -5,15 +5,15 @@
 omit = 
     */*urls.py
     *__init__.py
-include = django_user_connections*
-source = django_user_connections
+include = user_connections*
+source = user_connections
 
 [report]
 omit = 
     */*urls.py
     *__init__.py
 include = 
-    */django_user_connections/*
+    */user_connections/*
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
