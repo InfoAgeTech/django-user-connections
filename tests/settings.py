@@ -2,27 +2,17 @@ from __future__ import unicode_literals
 
 import os
 
-USER_CONNECTION_MODEL_MIXIN = 'tests.test_models.AbstractUserConnectionMixin'
-USER_CONNECTION_MANAGER = 'tests.test_models.managers.UserConnectionManager'
+USER_CONNECTION_MODEL_MIXIN = 'test_models.AbstractUserConnectionMixin'
+USER_CONNECTION_MANAGER = 'test_models.managers.UserConnectionManager'
 
 # Do not run in DEBUG in production!!!
 DEBUG = False
 
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-TIME_ZONE = 'UTC'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
+ALLOWED_HOSTS = ['*']
 LANGUAGE_CODE = 'en-us'
-
+SECRET_KEY = '12345abcd'
 SITE_ID = 1
-
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
+TIME_ZONE = 'UTC'
 USE_I18N = True
 
 INSTALLED_APPS = (
@@ -34,9 +24,12 @@ INSTALLED_APPS = (
     'user_connections',
 )
 
-SECRET_KEY = '12345abcd'
-ALLOWED_HOSTS = ['*']
-
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
 
 here = lambda *x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 
