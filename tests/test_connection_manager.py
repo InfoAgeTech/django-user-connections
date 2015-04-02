@@ -14,7 +14,7 @@ class ConnectionManagerTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCase, cls).setUpClass()
+        super(ConnectionManagerTestCase, cls).setUpClass()
         cls.user = create_user()
 
     def test_create_connection_pending(self):
