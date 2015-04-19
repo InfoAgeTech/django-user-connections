@@ -9,14 +9,17 @@ from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
 
-
 try:
-    # See doc around django_core.db.models.AbstractHookModelMixin
     AbstractUserConnectionMixin = get_class_from_settings(
         settings_key='USER_CONNECTION_MODEL_MIXIN')
 except NotImplementedError:
-    from django_core.db.models import AbstractHookModelMixin \
-                                   as AbstractUserConnectionMixin
+
+    class PlaceholderModel(models.Model):
+        """Placeholder model that does nothing."""
+        class Meta:
+            abstract = True
+
+    AbstractUserConnectionMixin = PlaceholderModel
 
 try:
     UserConnectionManager = get_class_from_settings(
@@ -39,7 +42,6 @@ class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
         connections by relevance.  The higher the activity count, the more
         likely these two users are interested in each other.
     """
-
     status = models.CharField(max_length=25,
                               default=Status.PENDING,
                               choices=Status.CHOICES)
