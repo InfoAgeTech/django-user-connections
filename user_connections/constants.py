@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 
 class Status():
     """The different status's a user connection can be in.
@@ -20,4 +18,5 @@ class Status():
         (ACCEPTED, 'Accepted'),
         (DECLINED, 'Declined'),
         (PENDING, 'Pending'),
-        (INACTIVE, 'Inactive'))
+        (INACTIVE, 'Inactive')
+    )

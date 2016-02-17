@@ -1,35 +1,14 @@
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import models
 from django.db.models import F
 from django_core.db.models import AbstractTokenModel
 from django_core.db.models.mixins.base import AbstractBaseModel
-from django_core.utils.loading import get_class_from_settings
 
 from .constants import Status
-
-try:
-    AbstractUserConnectionMixin = get_class_from_settings(
-        settings_key='USER_CONNECTION_MODEL_MIXIN')
-except NotImplementedError:
-
-    class PlaceholderModel(models.Model):
-        """Placeholder model that does nothing."""
-        class Meta:
-            abstract = True
-
-    AbstractUserConnectionMixin = PlaceholderModel
-
-try:
-    UserConnectionManager = get_class_from_settings(
-        settings_key='USER_CONNECTION_MANAGER')
-except NotImplementedError:
-    from .managers import UserConnectionManager
+from .managers import UserConnectionManager
 
 
-class AbstractUserConnection(AbstractUserConnectionMixin, AbstractTokenModel,
-                             AbstractBaseModel):
+class AbstractUserConnection(AbstractTokenModel, AbstractBaseModel):
     """Abstract user connection model.
 
     :field status: status of the connection. Can be one of

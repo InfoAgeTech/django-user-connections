@@ -133,23 +133,3 @@ class UserConnectionTestCase(SingleUserTestCase):
 
         user_3 = create_user()
         self.assertIsNone(c.get_connected_user(user_3))
-
-
-class UserConnectionExtensionTests(SingleUserTestCase):
-    """TestCase for adding custom managers or mixins to the UserConnection
-    model.
-    """
-
-    def test_method_added_to_user_connections_model(self):
-        user_2 = create_user()
-        c = UserConnection.objects.create(created_user=self.user,
-                                          with_user=user_2,
-                                          status=Status.ACCEPTED)
-        self.assertTrue(hasattr(c, 'my_test_method'))
-        self.assertEqual(c.my_test_method(), 'worked')
-
-    def test_model_manager_extended(self):
-        self.assertTrue(hasattr(UserConnection.objects,
-                                'my_new_manager_method'))
-        self.assertEqual(UserConnection.objects.my_new_manager_method(),
-                         'works')

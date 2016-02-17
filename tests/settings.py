@@ -1,9 +1,5 @@
-from __future__ import unicode_literals
-
 import os
 
-USER_CONNECTION_MODEL_MIXIN = 'test_models.AbstractUserConnectionMixin'
-USER_CONNECTION_MANAGER = 'test_models.managers.UserConnectionManager'
 
 # Do not run in DEBUG in production!!!
 DEBUG = False
@@ -20,7 +16,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django_testing',
     'django_core',
-    'test_models',
     'user_connections',
 )
 

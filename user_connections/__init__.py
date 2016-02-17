@@ -1,5 +1,4 @@
-from __future__ import unicode_literals
-
+from django.apps import apps
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -10,7 +9,6 @@ def get_user_connection_model():
     allow you to set the model instance to a different model subclass.
     """
     from django.conf import settings
-    from django.db.models import get_model
 
     if not hasattr(settings, 'USER_CONNECTION_MODEL'):
         from .models import UserConnection
@@ -22,7 +20,7 @@ def get_user_connection_model():
         raise ImproperlyConfigured("USER_CONNECTION_MODEL must be of the form "
                                    "'app_label.model_name'")
 
-    user_connection_model = get_model(app_label, model_name)
+    user_connection_model = apps.get_model(app_label, model_name)
 
     if user_connection_model is None:
         raise ImproperlyConfigured("USER_CONNECTION_MODEL refers to model '%s' "
